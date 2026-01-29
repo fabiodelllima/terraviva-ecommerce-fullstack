@@ -5,20 +5,34 @@
         <router-link to="/" class="navbar-item" id="custom-logo">
           &nbsp;&nbsp;&nbsp;terra<strong>viva</strong>
         </router-link>
-        <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu"
-          @click="showMobileMenu = !showMobileMenu">
+        <a
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbar-menu"
+          @click="showMobileMenu = !showMobileMenu"
+        >
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
-      <div class="navbar-menu" id="navbar-menu" v-bind:class="{ 'is-active': showMobileMenu }">
+      <div
+        class="navbar-menu"
+        id="navbar-menu"
+        v-bind:class="{ 'is-active': showMobileMenu }"
+      >
         <div class="navbar-start">
           <div class="navbar-item">
             <form method="get" action="/search">
               <div class="field has-addons">
                 <div class="control">
-                  <input type="text" class="input" placeholder="Pesquisar..." name="query" />
+                  <input
+                    type="text"
+                    class="input"
+                    placeholder="Pesquisar..."
+                    name="query"
+                  />
                 </div>
                 <div class="control">
                   <button class="button is-success">
@@ -41,7 +55,10 @@
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.isAuthenticated">
-                <router-link to="/my-account" class="button is-success is-outlined">
+                <router-link
+                  to="/my-account"
+                  class="button is-success is-outlined"
+                >
                   Minha conta
                 </router-link>
               </template>
@@ -50,7 +67,11 @@
                   Login
                 </router-link>
               </template>
-              <router-link to="/cart" class="button is-success" id="custom-cart">
+              <router-link
+                to="/cart"
+                class="button is-success"
+                id="custom-cart"
+              >
                 <span class="icon"><i class="fas fa-shopping-cart"></i></span>
                 <span>Carrinho ({{ cartTotalLength }})</span>
               </router-link>
@@ -59,7 +80,10 @@
         </div>
       </div>
     </nav>
-    <div class="is-loading-bar has-text-centered" v-bind:class="{ 'is-loading': $store.state.isLoading }">
+    <div
+      class="is-loading-bar has-text-centered"
+      v-bind:class="{ 'is-loading': $store.state.isLoading }"
+    >
       <div class="lds-dual-ring"></div>
     </div>
     <section class="section">
@@ -194,9 +218,13 @@ strong {
 }
 
 #custom-logo {
+  white-space: nowrap;
+  gap: 0;
   font-family: "Montserrat Alternates", sans-serif;
   color: hsl(141, 53%, 53%);
   font-size: 2.5em;
+  display: inline;
+  gap: 0;
 }
 
 /* NAVBAR HOVER LINKS */
@@ -312,5 +340,28 @@ a.router-link-exact-active {
 
 .router-link-exact-active a {
   color: #48c774;
+}
+/* Bulma 1.0 fixes */
+.button.is-success {
+  color: #fff !important;
+}
+.button.is-success .icon {
+  color: #fff !important;
+}
+.button.is-success:hover {
+  color: #fff !important;
+}
+.button.is-success.is-outlined {
+  color: #48c774 !important;
+  background-color: transparent !important;
+}
+.button.is-success.is-outlined:hover {
+  color: #fff !important;
+  background-color: #48c774 !important;
+}
+.navbar-item:hover,
+.navbar-item.router-link-active,
+.navbar-item.router-link-exact-active {
+  background-color: transparent !important;
 }
 </style>

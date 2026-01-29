@@ -13,14 +13,18 @@
       <div class="column is-12">
         <h2 class="is-size-2 has-text-centered"><strong>Produtos</strong></h2>
       </div>
-      <ProductBox v-for="product in latestProducts" v-bind:key="product.id" v-bind:product="product" />
+      <ProductBox
+        v-for="product in latestProducts"
+        v-bind:key="product.id"
+        v-bind:product="product"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import ProductBox from "@/components/ProductBox";
+import ProductBox from "@/components/ProductBox.vue";
 
 export default {
   name: "Home",
