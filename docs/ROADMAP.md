@@ -1,6 +1,6 @@
 # ROADMAP
 
-**Versão:** 2.1.0
+**Versão:** 0.3.0
 
 ---
 
@@ -17,7 +17,7 @@ Transformar projeto acadêmico de 2021 em portfólio profissional de produção 
 | Storage persistente       | CONCLUÍDO | CRÍTICO    |
 | Validação end-to-end      | CONCLUÍDO | CRÍTICO    |
 | Modernizar stack          | PARCIAL   | ALTO       |
-| Eliminar vulnerabilidades | PARCIAL   | ALTO       |
+| Eliminar vulnerabilidades | CONCLUÍDO   | ALTO       |
 | Implementar testes        | PENDENTE  | MÉDIO      |
 | CI/CD automatizado        | PENDENTE  | BAIXO      |
 
@@ -35,12 +35,12 @@ Transformar projeto acadêmico de 2021 em portfólio profissional de produção 
 - [x] Storage persistente (Supabase Storage)
 - [ ] Testes automatizados (Fase 2)
 
-### Frontend (Vue.js 3.2.13)
+### Frontend (Vue.js 3.5.13 + Vite)
 
-- [x] Vulnerabilidades críticas resolvidas (68 => 8)
+- [x] Vulnerabilidades eliminadas (68 => 0)
 - [x] Deploy funcional (Vercel)
 - [x] Validação end-to-end
-- [ ] Migração para Vite (Fase 2)
+- [x] Migração para Vite
 - [ ] Testes automatizados (Fase 2)
 
 ### Infraestrutura
@@ -81,10 +81,10 @@ Transformar projeto acadêmico de 2021 em portfólio profissional de produção 
 
 ### Frontend
 
-- [ ] Migração Vue CLI para Vite
-- [ ] Vue.js 3.2 para 3.5+
+- [x] Migração Vue CLI para Vite
+- [x] Vue.js 3.2 para 3.5+
 - [ ] Vuex para Pinia
-- [ ] Resolver 8 CVEs restantes
+- [x] Resolver 8 CVEs restantes (0 vulnerabilidades)
 - [ ] Testes Vitest (>90% coverage)
 
 ### Backend
@@ -150,4 +150,4 @@ Migrado de Netlify. 6000 build minutes/mês (vs 300 Netlify), CDN global.
 
 ---
 
-**Última revisão:** 11/01/2026
+**Última revisão:** 29/01/2026
