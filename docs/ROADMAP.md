@@ -1,152 +1,162 @@
 # ROADMAP
 
-**Versão:** 0.3.0
+**Versão:** 0.4.0
 
 ---
 
 ## Visão Geral
 
-Transformar projeto acadêmico de 2021 em portfólio profissional de produção com stack moderna e deploy funcional.
-
-### Objetivos
-
-| Objetivo                  | Status    | Prioridade |
-| ------------------------- | --------- | ---------- |
-| Deploy funcional (back)   | CONCLUÍDO | CRÍTICO    |
-| Deploy funcional (front)  | CONCLUÍDO | CRÍTICO    |
-| Storage persistente       | CONCLUÍDO | CRÍTICO    |
-| Validação end-to-end      | CONCLUÍDO | CRÍTICO    |
-| Modernizar stack          | PARCIAL   | ALTO       |
-| Eliminar vulnerabilidades | CONCLUÍDO   | ALTO       |
-| Implementar testes        | PENDENTE  | MÉDIO      |
-| CI/CD automatizado        | PENDENTE  | BAIXO      |
+O objetivo é transformar um projeto acadêmico de 2021 em case para portfólio profissional com foco em desenvolvimento full-stack, DevOps e arquitetura de software. O roadmap está organizado em fases incrementais, cada uma agregando valor demonstrável ao projeto.
 
 ---
 
-## Estado Atual
-
-### Backend (Django 5.2.10 + Python 3.14)
-
-- [x] Python 3.14 compatível
-- [x] Django 5.2.10 atualizado
-- [x] SECRET_KEY em variável de ambiente
-- [x] Deploy funcional (Render.com)
-- [x] PostgreSQL (Supabase)
-- [x] Storage persistente (Supabase Storage)
-- [ ] Testes automatizados (Fase 2)
-
-### Frontend (Vue.js 3.5.13 + Vite)
-
-- [x] Vulnerabilidades eliminadas (68 => 0)
-- [x] Deploy funcional (Vercel)
-- [x] Validação end-to-end
-- [x] Migração para Vite
-- [ ] Testes automatizados (Fase 2)
-
-### Infraestrutura
-
-- [x] Backend: Render.com
-- [x] Frontend: Vercel
-- [x] Database: Supabase PostgreSQL
-- [x] Storage: Supabase Storage (CDN)
-- [ ] CI/CD GitHub Actions (Fase 3)
-
----
-
-## Fase 1: Restauração - CONCLUÍDA (100%)
+## Fase 1: Restauração - Concluída
 
 **Período:** Janeiro 2026
 
-### Backend - CONCLUÍDO
+A primeira fase focou em tornar o projeto funcional novamente após 4 anos sem manutenção. Isso envolveu migração de infraestrutura, atualização de dependências e resolução de incompatibilidades.
 
-- [x] Adicionar gunicorn
-- [x] Configurar dj-database-url
-- [x] Mover secrets para env vars
-- [x] Deploy Render.com
-- [x] Supabase Storage integration
-- [x] Django 5.2.10 (Python 3.14 fix)
-
-### Frontend - CONCLUÍDO
-
-- [x] Atualizar axios para usar env var
-- [x] Configurar vercel.json (SPA routing)
-- [x] Deploy Vercel
+- [x] Deploy backend (Render.com)
+- [x] Deploy frontend (Vercel)
+- [x] Database PostgreSQL (Supabase)
+- [x] Storage persistente (Supabase Storage)
+- [x] Django 6.0.1
 - [x] Validação end-to-end
 
 ---
 
-## Fase 2: Modernização
+## Fase 2: Modernização - Concluída
 
-**Período:** Fevereiro-Março 2026
+**Período:** Janeiro 2026
 
-### Frontend
+A segunda fase modernizou o tooling e eliminou débito técnico acumulado. A migração para Vite melhorou drasticamente a experiência de desenvolvimento, e a reorganização em monorepo estabeleceu base sólida para evolução.
 
 - [x] Migração Vue CLI para Vite
 - [x] Vue.js 3.2 para 3.5+
-- [ ] Vuex para Pinia
-- [x] Resolver 8 CVEs restantes (0 vulnerabilidades)
-- [ ] Testes Vitest (>90% coverage)
+- [x] Bulma 0.9.4 para 1.0.2
+- [x] Vulnerabilidades: 68 → 0
+- [x] Reorganização estrutura (monorepo)
 
-### Backend
+---
+
+## Fase 3: DevOps Foundation
+
+**Período:** Fevereiro 2026
+
+Esta fase estabelece a infraestrutura de DevOps necessária para desenvolvimento profissional. Containerização garante consistência entre ambientes, CI/CD automatiza validações, e observabilidade permite monitorar a aplicação em produção.
+
+### Containerização
+
+- [ ] Dockerfile (backend)
+- [ ] Dockerfile (frontend)
+- [ ] docker-compose.yml (ambiente dev)
+- [ ] .dockerignore
+
+### CI/CD
+
+- [ ] GitHub Actions: lint + tests
+- [ ] GitHub Actions: build + deploy
+- [ ] Branch protection rules
+
+### Observabilidade
+
+- [ ] Sentry (error tracking)
+- [ ] Health check endpoints
+- [ ] Structured logging
+
+---
+
+## Fase 4: Qualidade de Código
+
+**Período:** Março 2026
+
+A quarta fase implementa práticas de qualidade de código através de testes automatizados, linting e análise estática. O objetivo é atingir cobertura superior a 90% no backend e 80% no frontend.
+
+### Testing
 
 - [ ] pytest + pytest-django
-- [ ] Coverage >90%
-- [ ] ruff (linter)
+- [ ] Coverage >90% backend
+- [ ] Vitest (frontend)
+- [ ] Cypress (e2e)
+- [ ] Coverage >80% frontend
+
+### Code Quality
+
+- [ ] ruff (linter Python)
 - [ ] mypy (type hints)
+- [ ] ESLint + Prettier
+- [ ] pre-commit hooks
 
-### Documentação
+### Refatoração
 
-- [ ] docs/BUSINESS_RULES.md
-- [ ] docs/DEPLOYMENT.md
-- [ ] ADRs em docs/decisions/
-
----
-
-## Fase 3: Produção
-
-**Período:** Abril 2026+
-
-### Infraestrutura
-
-- [ ] CI/CD GitHub Actions
-- [ ] Sentry (error tracking)
-- [ ] Logs estruturados
-
-### Features
-
-- [ ] Dashboard admin customizado
-- [ ] Relatórios vendas
-- [ ] Filtros avançados
+- [ ] Service Layer pattern
+- [ ] Repository pattern
+- [ ] SOLID principles
 
 ---
 
-## Cronograma
+## Fase 5: UX/UI Refresh
 
-| Fase   | Duração     | Período      | Status    |
-| ------ | ----------- | ------------ | --------- |
-| Fase 1 | 2 semanas   | Jan 2026     | CONCLUÍDA |
-| Fase 2 | 4-6 semanas | Fev-Mar 2026 | PLANEJADA |
-| Fase 3 | Contínuo    | Abr+ 2026    | PLANEJADA |
+**Período:** Abril 2026
+
+Esta fase renova a interface visual do projeto, aplicando princípios modernos de design e garantindo acessibilidade. O objetivo é atingir score superior a 90 no Lighthouse.
+
+- [ ] Redesign visual
+- [ ] Design system documentado
+- [ ] Acessibilidade (WCAG 2.1)
+- [ ] Lighthouse score >90
+- [ ] Loading/error/empty states
 
 ---
 
-## Decisões de Infraestrutura
+## Fase 6: API Evolution
 
-### ADR-001: Separação Backend/Frontend
+**Período:** Maio 2026
 
-Separar completamente em deployments independentes (API REST + SPA).
+A sexta fase evolui a API REST para GraphQL, oferecendo flexibilidade para o frontend e demonstrando conhecimento em diferentes paradigmas de API. A migração de Vuex para Pinia moderniza o gerenciamento de estado.
 
-### ADR-002: Render.com para Backend
+- [ ] GraphQL (graphene-django)
+- [ ] Apollo Client
+- [ ] Vuex para Pinia
+- [ ] TypeScript (gradual)
 
-Free tier com 750h/mês, SSL automático, deploy via Git.
+---
 
-### ADR-003: Supabase para Database e Storage
+## Fase 7: Event-Driven Architecture
 
-PostgreSQL 500MB + Storage 1GB com CDN global. Stack unificado.
+**Período:** Junho-Julho 2026
 
-### ADR-004: Vercel para Frontend
+Esta fase introduz processamento assíncrono e arquitetura orientada a eventos. Celery com Redis permite execução de tasks em background, enquanto message brokers possibilitam comunicação desacoplada entre componentes.
 
-Migrado de Netlify. 6000 build minutes/mês (vs 300 Netlify), CDN global.
+- [ ] Celery + Redis
+- [ ] Email notifications (async)
+- [ ] RabbitMQ
+- [ ] Kafka (exploração)
+
+---
+
+## Fase 8: Infrastructure as Code
+
+**Período:** Agosto 2026
+
+A fase final implementa orquestração de containers com Kubernetes e monitoramento com Prometheus/Grafana. Foco em operações de infraestrutura cloud-native.
+
+- [ ] Kubernetes manifests
+- [ ] Helm charts
+- [ ] Prometheus + Grafana
+- [ ] ArgoCD (GitOps)
+
+---
+
+## Métricas de Sucesso
+
+| Métrica                  | Atual  | Meta         |
+| ------------------------ | ------ | ------------ |
+| Test Coverage (Backend)  | 0%     | >90%         |
+| Test Coverage (Frontend) | 0%     | >80%         |
+| Vulnerabilities          | 0      | 0            |
+| Lighthouse Score         | ~70    | >90          |
+| Deploy Time              | Manual | <5min (auto) |
 
 ---
 
