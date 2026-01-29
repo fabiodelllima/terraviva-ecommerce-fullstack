@@ -8,6 +8,47 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ---
 
 ## [Unreleased]
+
+---
+
+## [0.4.0] - 2026-01-29
+
+### Contexto
+
+Reorganização completa da estrutura do projeto em monorepo, separando backend e frontend em diretórios dedicados. Atualização de toda a documentação técnica para padrão profissional.
+
+### Adicionado
+
+- Estrutura monorepo: `terraviva/backend` e `terraviva/frontend`
+- `docs/DEPLOYMENT.md` com configuração de infraestrutura
+- Prosa introdutória em todas as seções de documentação
+
+### Modificado
+
+- **Estrutura do Projeto**
+  - `order/`, `product/` => `terraviva/backend/apps/`
+  - `terraviva/` (config) => `terraviva/backend/config/`
+  - `terraviva_v/` => `terraviva/frontend/`
+  - `requirements.txt` => `terraviva/backend/requirements/base.txt`
+
+- **Imports e Configurações**
+  - Apps registrados como `apps.product`, `apps.order`
+  - `DJANGO_SETTINGS_MODULE` atualizado para `config.settings`
+  - Todos os imports internos atualizados
+
+- **Documentação**
+  - README.md com seções profissionais e prosa
+  - ARCHITECTURE.md focado em estado atual
+  - ROADMAP.md com fases detalhadas
+  - ENVIRONMENT.md atualizado para nova estrutura
+
+### Removido
+
+- Arquivos Vue CLI obsoletos (`babel.config.js`, `vue.config.js`)
+- Estrutura flat de diretórios na raiz
+
+---
+
 ## [0.3.0] - 2026-01-29
 
 ### Contexto
@@ -77,7 +118,6 @@ Migração completa do build system de Vue CLI para Vite, eliminando todas as vu
 
 ---
 
-
 ### Em Desenvolvimento
 
 - Documentação BUSINESS_RULES.md
@@ -94,7 +134,6 @@ Implementação de armazenamento persistente de mídia via Supabase Storage, res
 ### Adicionado
 
 - **Supabase Storage Integration**
-
   - Custom storage backend (`terraviva/storage.py`) para Supabase
   - Upload de imagens diretamente para bucket `media/uploads/`
   - URLs públicas via CDN Supabase (285 POPs globalmente)
@@ -108,19 +147,16 @@ Implementação de armazenamento persistente de mídia via Supabase Storage, res
 ### Modificado
 
 - **Django Upgrade**
-
   - Django: 4.2.17 => 5.2.10 (compatibilidade Python 3.14)
   - Correção do bug `AttributeError: 'super' object has no attribute 'dicts'`
   - Configuração migrada de `DEFAULT_FILE_STORAGE` para `STORAGES`
 
 - **Product Model**
-
   - Método `make_thumbnail()` corrigido (path duplication fix)
   - Métodos `get_image()` e `get_thumbnail()` com error handling
   - `verbose_name_plural` corrigido para "Produtos"
 
 - **Frontend Deploy**
-
   - Migração de Netlify para Vercel
   - Configuração `vercel.json` para SPA routing
 
@@ -199,7 +235,6 @@ Início da **revitalização completa** do projeto após 4 anos sem manutenção
 ### Modificado
 
 - **Backend Dependencies (Python)**
-
   - Python: 3.9 => 3.14
   - Django: 4.1.2 => 4.2.17 LTS
   - Pillow: 9.2.0 => 10.4.0
@@ -228,7 +263,6 @@ Release inicial do projeto acadêmico **Coding4Hope**. Plataforma e-commerce des
 ### Adicionado
 
 - **Backend Django**
-
   - Django 4.1.2 + Django REST Framework
   - Apps: `product`, `order`
   - Models: Product, Category, Order, OrderItem
@@ -259,4 +293,4 @@ Projeto entregue com sucesso à ONG, demonstrando viabilidade técnica e impacto
 ---
 
 **Última atualização:** 29/01/2026  
-**Versão atual:** 0.3.0
+**Versão atual:** 0.4.0

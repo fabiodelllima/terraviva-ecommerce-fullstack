@@ -1,13 +1,12 @@
-# Configuração de Ambiente
+# ENVIRONMENT
 
-**Versão:** 2.1.0  
-**Última atualização:** 11/01/2026
+**Versão:** 0.4.0
 
 ---
 
 ## Visão Geral
 
-O projeto utiliza variáveis de ambiente para configurações sensíveis, seguindo a metodologia 12-Factor App.
+O projeto utiliza variáveis de ambiente para configurações sensíveis, seguindo a metodologia 12-Factor App. Todas as credenciais são gerenciadas via arquivos `.env` localmente e variáveis de ambiente nos serviços de deploy.
 
 ---
 
@@ -50,35 +49,31 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis, seguin
 
 ---
 
-## Desenvolvimento Local
+## Configuração por Ambiente
+
+### Desenvolvimento Local
 
 ```bash
-cp .env.example .env
-python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-# Editar .env com a SECRET_KEY gerada
-```
-
-### Exemplo .env
-
-```bash
-SECRET_KEY=sua-chave-aqui
+# terraviva/backend/.env
+SECRET_KEY=dev-secret-key-change-in-production
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 DATABASE_URL=sqlite:///db.sqlite3
 CORS_ALLOWED_ORIGINS=http://localhost:8080
 ```
 
----
+```bash
+# terraviva/frontend/.env
+VITE_API_URL=http://localhost:8000
+```
 
-## Produção
-
-### Render.com (Backend)
+### Produção (Render)
 
 ```bash
-SECRET_KEY=<nova-chave-producao>
+SECRET_KEY=<chave-segura-gerada>
 DEBUG=False
 ALLOWED_HOSTS=terraviva-api-bg8s.onrender.com
-DATABASE_URL=postgresql://user:pass@host:5432/db
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_SERVICE_KEY=<service_role_key>
 SUPABASE_STORAGE_BUCKET=media
@@ -86,24 +81,31 @@ STRIPE_SECRET_KEY=sk_live_xxx
 CORS_ALLOWED_ORIGINS=https://terraviva.vercel.app
 ```
 
-### Vercel (Frontend)
+### Produção (Vercel)
 
 ```bash
-VUE_APP_API_URL=https://terraviva-api-bg8s.onrender.com
-VUE_APP_STRIPE_PUBLIC_KEY=pk_live_xxx
+VITE_API_URL=https://terraviva-api-bg8s.onrender.com
+```
+
+---
+
+## Gerando SECRET_KEY
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
 ---
 
 ## Checklist de Segurança
 
-- [ ] `.env` no `.gitignore`
-- [ ] `SECRET_KEY` única para produção
-- [ ] `DEBUG=False` em produção
-- [ ] `ALLOWED_HOSTS` restrito
-- [ ] `SUPABASE_SERVICE_KEY` nunca no frontend
-- [ ] HTTPS habilitado
+- [x] `.env` no `.gitignore`
+- [x] `SECRET_KEY` única para produção
+- [x] `DEBUG=False` em produção
+- [x] `ALLOWED_HOSTS` restrito
+- [x] `SUPABASE_SERVICE_KEY` nunca no frontend
+- [x] HTTPS habilitado em produção
 
 ---
 
-**Próxima revisão:** Após Fase 2
+**Última revisão:** 29/01/2026
