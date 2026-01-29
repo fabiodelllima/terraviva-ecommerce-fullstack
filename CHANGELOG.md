@@ -11,6 +11,46 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [0.5.0] - 2026-01-29
+
+### Contexto
+
+Implementação de containerização completa do projeto com Docker e Docker Compose, seguindo as melhores práticas oficiais. Estabelece base para CI/CD e ambientes consistentes entre desenvolvimento e produção.
+
+### Adicionado
+
+- **Dockerfiles Multi-Stage**
+  - `terraviva/backend/Dockerfile` com builder stage para wheels Python
+  - `terraviva/frontend/Dockerfile` com Node build stage e Nginx production
+  - Non-root users (UID 10001) para segurança
+  - Health checks em todos os containers
+
+- **Docker Compose**
+  - `compose.yaml` para desenvolvimento com hot reload
+  - `compose.prod.yaml` com overrides de produção
+  - Networks isoladas: `backend-network` e `frontend-network`
+  - Volumes nomeados para persistência de dados
+
+- **Configurações de Suporte**
+  - `terraviva/backend/docker-entrypoint.sh` para migrations e collectstatic
+  - `terraviva/frontend/nginx.conf` otimizado para SPA
+  - `.dockerignore` na raiz e em cada serviço
+  - `docs/DOCKER.md` com documentação completa
+
+### Modificado
+
+- Estrutura de arquivos reorganizada para suportar contextos Docker separados
+
+### Infraestrutura
+
+- **PostgreSQL:** 16-alpine com health checks
+- **Backend:** Python 3.13-slim + Gunicorn (prod) / runserver (dev)
+- **Frontend:** Node 20-alpine (build) + Nginx Alpine (serve)
+- **Networks:** Isolamento backend-network / frontend-network
+- **Volumes:** postgres_data, backend_static, backend_media
+
+---
+
 ## [0.4.0] - 2026-01-29
 
 ### Contexto
@@ -293,4 +333,4 @@ Projeto entregue com sucesso à ONG, demonstrando viabilidade técnica e impacto
 ---
 
 **Última atualização:** 29/01/2026  
-**Versão atual:** 0.4.0
+**Versão atual:** 0.5.0
