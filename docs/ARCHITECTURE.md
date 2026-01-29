@@ -1,6 +1,6 @@
 # ARCHITECTURE
 
-**Versão:** 2.1.0
+**Versão:** 0.3.0
 
 ---
 
@@ -18,43 +18,55 @@ Arquitetura Full-Stack Separada:
 ## Estrutura de Diretórios
 
 ```
-projeto-terraviva/
-├── order/                      # App Django: Pedidos
-│   ├── models.py               # Order, OrderItem
-│   ├── views.py                # checkout(), OrdersList
-│   ├── serializers.py
-│   └── urls.py
-│
-├── product/                    # App Django: Produtos
-│   ├── models.py               # Product, Category
-│   ├── views.py                # LatestProductsList, ProductDetail
-│   ├── serializers.py
-│   └── urls.py
-│
-├── terraviva/                  # Configuração Django
-│   ├── settings.py
-│   ├── storage.py              # Custom Supabase Storage backend
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── terraviva_v/                # Frontend Vue.js
-│   ├── src/
-│   │   ├── components/
-│   │   ├── views/
-│   │   ├── router/
-│   │   ├── store/
-│   │   └── main.js
-│   ├── vercel.json             # SPA routing config
-│   └── package.json
-│
-├── docs/                       # Documentação
-│   ├── ROADMAP.md
+terraviva-ecommerce-fullstack/
+├── docs/                           # Documentação
 │   ├── ARCHITECTURE.md
-│   └── ENVIRONMENT.md
+│   ├── ENVIRONMENT.md
+│   └── ROADMAP.md
 │
-├── requirements.txt
+├── terraviva/
+│   ├── backend/
+│   │   ├── apps/
+│   │   │   ├── order/              # App: Pedidos
+│   │   │   │   ├── models.py       # Order, OrderItem
+│   │   │   │   ├── views.py
+│   │   │   │   ├── serializers.py
+│   │   │   │   └── urls.py
+│   │   │   └── product/            # App: Produtos
+│   │   │       ├── models.py       # Product, Category
+│   │   │       ├── views.py
+│   │   │       ├── serializers.py
+│   │   │       └── urls.py
+│   │   ├── config/
+│   │   │   ├── settings.py
+│   │   │   ├── urls.py
+│   │   │   ├── wsgi.py
+│   │   │   └── storage.py          # Supabase Storage backend
+│   │   ├── requirements/
+│   │   │   └── base.txt
+│   │   ├── static/
+│   │   ├── media/
+│   │   └── manage.py
+│   │
+│   └── frontend/
+│       ├── src/
+│       │   ├── components/
+│       │   ├── views/
+│       │   ├── router/
+│       │   ├── store/
+│       │   └── main.js
+│       ├── index.html
+│       ├── vite.config.js
+│       ├── vercel.json
+│       └── package.json
+│
+├── .github/
+│   └── workflows/
+│       └── keep-alive.yml
+│
 ├── CHANGELOG.md
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ---
@@ -87,10 +99,27 @@ projeto-terraviva/
 
 ### URLs de Produção
 
-| Serviço     | URL                                        |
-| ----------- | ------------------------------------------ |
-| Frontend    | <https://terraviva.vercel.app\>            |
-| Backend API | <https://terraviva-api-bg8s.onrender.com\> |
+| Serviço     | URL                                     |
+| ----------- | --------------------------------------- |
+| Frontend    | https://terraviva.vercel.app            |
+| Backend API | https://terraviva-api-bg8s.onrender.com |
+
+---
+
+## Stack Tecnológico
+
+| Camada            | Tecnologia            | Versão |
+| ----------------- | --------------------- | ------ |
+| Backend Runtime   | Python                | 3.14   |
+| Backend Framework | Django                | 6.0.1  |
+| API               | Django REST Framework | 3.15.2 |
+| Auth              | djoser                | 2.2.3  |
+| Storage           | supabase-py           | 2.27.1 |
+| Payments          | Stripe                | 11.3.0 |
+| Frontend          | Vue.js                | 3.5.13 |
+| Build Tool        | Vite                  | 6.4.1  |
+| State             | Vuex                  | 4.1.0  |
+| CSS               | Bulma                 | 1.0.2  |
 
 ---
 
@@ -99,7 +128,7 @@ projeto-terraviva/
 ### Custom Storage Backend
 
 ```python
-# terraviva/storage.py
+# terraviva/backend/config/storage.py
 class SupabaseStorage(Storage):
     """
     Custom Django storage backend for Supabase Storage.
@@ -107,19 +136,6 @@ class SupabaseStorage(Storage):
     - URLs públicas via CDN
     - Fallback para imagens legadas
     """
-```
-
-### Configuração Django 5.2+
-
-```python
-STORAGES = {
-    "default": {
-        "BACKEND": "terraviva.storage.SupabaseStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 ```
 
 ### Estrutura do Bucket
@@ -139,52 +155,23 @@ media/                          # Bucket Supabase
 - Correto: `maca.jpg`, `limao.jpg`, `acai.jpg`
 - Incorreto: `maçã.jpg`, `limão.jpg`, `açaí.jpg`
 
-O upload de arquivos com caracteres especiais resultará em erro `400 Bad Request: Invalid key`.
+---
+
+## Deploy Configuration
+
+### Render (Backend)
+
+- **Root Directory:** `terraviva/backend`
+- **Build Command:** `pip install -r requirements/base.txt`
+- **Start Command:** `gunicorn config.wsgi:application`
+
+### Vercel (Frontend)
+
+- **Root Directory:** `terraviva/frontend`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Environment Variable:** `VITE_API_URL=https://terraviva-api-bg8s.onrender.com`
 
 ---
 
-## Stack Tecnológico
-
-| Camada            | Tecnologia            | Versão |
-| ----------------- | --------------------- | ------ |
-| Backend Runtime   | Python                | 3.14   |
-| Backend Framework | Django                | 5.2.10 |
-| API               | Django REST Framework | 3.15.2 |
-| Auth              | djoser                | 2.2.3  |
-| Storage           | supabase-py           | 2.27.1 |
-| Payments          | Stripe                | 11.3.0 |
-| Frontend          | Vue.js                | 3.2.13 |
-| State             | Vuex                  | 4.0.0  |
-| CSS               | Bulma                 | 0.9.4  |
-
----
-
-## Estrutura Proposta (Fase 2)
-
-```
-projeto-terraviva/
-├── backend/
-│   ├── apps/
-│   │   ├── order/
-│   │   └── product/
-│   ├── config/
-│   │   └── settings/
-│   │       ├── base.py
-│   │       ├── development.py
-│   │       └── production.py
-│   └── requirements/
-│       ├── base.txt
-│       └── production.txt
-│
-├── frontend/
-│   ├── src/
-│   ├── tests/
-│   └── vite.config.js
-│
-└── .github/
-    └── workflows/
-```
-
----
-
-**Última revisão:** 11/01/2026
+**Última revisão:** 29/01/2026
