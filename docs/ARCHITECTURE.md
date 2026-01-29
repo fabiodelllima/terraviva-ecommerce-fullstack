@@ -1,190 +1,104 @@
 # ARCHITECTURE
 
-**Versão:** 2.1.0
+**Versão:** 0.4.0
 
 ---
 
 ## Visão Geral
 
-Arquitetura Full-Stack Separada:
+Terra Viva segue uma arquitetura de aplicação distribuída com separação completa entre frontend e backend. O frontend é uma Single Page Application (SPA) que consome uma API REST. O backend é stateless, permitindo escalabilidade horizontal.
 
-- Backend: Django REST API
-- Frontend: Vue.js SPA
-- Database: Supabase PostgreSQL
-- Storage: Supabase Storage (CDN)
+A escolha por serviços cloud separados (Vercel, Render, Supabase) reflete uma arquitetura moderna onde cada componente é otimizado para sua função específica, em contraste com o modelo monolítico tradicional.
 
 ---
 
-## Estrutura de Diretórios
+## Diagrama
 
 ```
-projeto-terraviva/
-├── order/                      # App Django: Pedidos
-│   ├── models.py               # Order, OrderItem
-│   ├── views.py                # checkout(), OrdersList
-│   ├── serializers.py
-│   └── urls.py
-│
-├── product/                    # App Django: Produtos
-│   ├── models.py               # Product, Category
-│   ├── views.py                # LatestProductsList, ProductDetail
-│   ├── serializers.py
-│   └── urls.py
-│
-├── terraviva/                  # Configuração Django
-│   ├── settings.py
-│   ├── storage.py              # Custom Supabase Storage backend
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── terraviva_v/                # Frontend Vue.js
-│   ├── src/
-│   │   ├── components/
-│   │   ├── views/
-│   │   ├── router/
-│   │   ├── store/
-│   │   └── main.js
-│   ├── vercel.json             # SPA routing config
-│   └── package.json
-│
-├── docs/                       # Documentação
-│   ├── ROADMAP.md
-│   ├── ARCHITECTURE.md
-│   └── ENVIRONMENT.md
-│
-├── requirements.txt
-├── CHANGELOG.md
-└── README.md
+                      ┌─────────────┐
+                      │   Browser   │
+                      └──────┬──────┘
+                             │
+               ┌─────────────┴─────────────┐
+               v                           v
+      ┌─────────────────┐        ┌─────────────────┐
+      │     Vercel      │        │     Render      │
+      │    Vue.js SPA   │<──────>│   Django API    │
+      │    CDN Global   │        │    gunicorn     │
+      └─────────────────┘        └────────┬────────┘
+                                          │
+                            ┌─────────────┴─────────────┐
+                            v                           v
+                   ┌─────────────────┐        ┌─────────────────┐
+                   │    Supabase     │        │    Supabase     │
+                   │   PostgreSQL    │        │     Storage     │
+                   └─────────────────┘        └─────────────────┘
 ```
-
----
-
-## Infraestrutura de Produção
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        TERRA VIVA INFRASTRUCTURE                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│         ┌──────────────────┐       ┌──────────────────┐                 │
-│         │     VERCEL       │       │    RENDER.COM    │                 │
-│         │   ────────────   │       │   ────────────   │                 │
-│         │   Vue.js SPA     │◄─────►│   Django API     │                 │
-│         │   CDN Global     │       │   gunicorn       │                 │
-│         └──────────────────┘       └────────┬─────────┘                 │
-│                                             │                           │
-│                              ┌──────────────┴──────────────┐            │
-│                              ▼                             ▼            │
-│                   ┌──────────────────┐         ┌──────────────────┐     │
-│                   │    SUPABASE      │         │    SUPABASE      │     │
-│                   │    PostgreSQL    │         │    Storage       │     │
-│                   │   500MB free     │         │   1GB free       │     │
-│                   └──────────────────┘         │   CDN (285 POPs) │     │
-│                                                └──────────────────┘     │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### URLs de Produção
-
-| Serviço     | URL                                        |
-| ----------- | ------------------------------------------ |
-| Frontend    | <https://terraviva.vercel.app\>            |
-| Backend API | <https://terraviva-api-bg8s.onrender.com\> |
-
----
-
-## Storage Architecture
-
-### Custom Storage Backend
-
-```python
-# terraviva/storage.py
-class SupabaseStorage(Storage):
-    """
-    Custom Django storage backend for Supabase Storage.
-    - Upload direto para bucket Supabase
-    - URLs públicas via CDN
-    - Fallback para imagens legadas
-    """
-```
-
-### Configuração Django 5.2+
-
-```python
-STORAGES = {
-    "default": {
-        "BACKEND": "terraviva.storage.SupabaseStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-```
-
-### Estrutura do Bucket
-
-```
-media/                          # Bucket Supabase
-└── uploads/
-    ├── produto1.jpg
-    ├── produto1_thumb.jpg
-    └── ...
-```
-
-### Limitações do Supabase Storage
-
-**Nomes de arquivo:** O Supabase Storage não aceita caracteres especiais (acentos, cedilha, etc.) em nomes de arquivo. Utilize apenas caracteres ASCII:
-
-- Correto: `maca.jpg`, `limao.jpg`, `acai.jpg`
-- Incorreto: `maçã.jpg`, `limão.jpg`, `açaí.jpg`
-
-O upload de arquivos com caracteres especiais resultará em erro `400 Bad Request: Invalid key`.
 
 ---
 
 ## Stack Tecnológico
 
-| Camada            | Tecnologia            | Versão |
-| ----------------- | --------------------- | ------ |
-| Backend Runtime   | Python                | 3.14   |
-| Backend Framework | Django                | 5.2.10 |
-| API               | Django REST Framework | 3.15.2 |
-| Auth              | djoser                | 2.2.3  |
-| Storage           | supabase-py           | 2.27.1 |
-| Payments          | Stripe                | 11.3.0 |
-| Frontend          | Vue.js                | 3.2.13 |
-| State             | Vuex                  | 4.0.0  |
-| CSS               | Bulma                 | 0.9.4  |
+O projeto utiliza ferramentas atualizadas e bem estabelecidas, priorizando produtividade, manutenibilidade e compatibilidade com o ecossistema cloud. A tabela abaixo detalha cada componente e a justificativa de escolha.
+
+| Camada   | Tecnologia            | Versão | Justificativa                           |
+| -------- | --------------------- | ------ | --------------------------------------- |
+| Runtime  | Python                | 3.14   | Versão mais recente, melhor performance |
+| Backend  | Django                | 6.0.1  | Framework maduro, batteries included    |
+| API      | Django REST Framework | 3.15.2 | Padrão de facto para APIs Django        |
+| Auth     | djoser                | 2.2.3  | Endpoints de auth prontos               |
+| Payments | Stripe                | 11.3.0 | Líder de mercado em pagamentos          |
+| Frontend | Vue.js                | 3.5.13 | Reativo, progressivo, curva suave       |
+| Build    | Vite                  | 6.4.1  | Build rápido, HMR instantâneo           |
+| State    | Vuex                  | 4.1.0  | Gerenciamento de estado centralizado    |
+| CSS      | Bulma                 | 1.0.2  | CSS-only, sem JS, customizável          |
 
 ---
 
-## Estrutura Proposta (Fase 2)
+## Padrões Utilizados
 
-```
-projeto-terraviva/
-├── backend/
-│   ├── apps/
-│   │   ├── order/
-│   │   └── product/
-│   ├── config/
-│   │   └── settings/
-│   │       ├── base.py
-│   │       ├── development.py
-│   │       └── production.py
-│   └── requirements/
-│       ├── base.txt
-│       └── production.txt
-│
-├── frontend/
-│   ├── src/
-│   ├── tests/
-│   └── vite.config.js
-│
-└── .github/
-    └── workflows/
-```
+### Backend
+
+O backend segue o padrão MVT (Model-View-Template) do Django, adaptado para API REST onde Views funcionam como endpoints e Templates são substituídos por respostas JSON. O fluxo de uma requisição passa por URL routing, View, Serializer e Model antes de persistir no banco de dados.
+
+### Frontend
+
+O frontend utiliza arquitetura baseada em componentes com gerenciamento de estado centralizado via Vuex. Os componentes disparam actions que executam mutations no state, e as mudanças propagam reatividade para a interface. O Vue Router gerencia navegação client-side sem recarregar a página.
 
 ---
 
-**Última revisão:** 11/01/2026
+## Storage
+
+O projeto utiliza um custom storage backend para integrar Django com Supabase Storage. Esta abordagem permite upload de imagens diretamente para CDN sem sobrecarregar o servidor de aplicação, resultando em melhor performance e menor custo de banda.
+
+```python
+# config/storage.py
+class SupabaseStorage(Storage):
+    """
+    Custom Django storage backend for Supabase Storage.
+    - Upload direto via API Supabase
+    - URLs públicas via CDN (285+ edge locations)
+    - Fallback para imagens legadas
+    """
+```
+
+O Supabase Storage não aceita caracteres especiais em nomes de arquivo (acentos, cedilha). Todos os uploads utilizam apenas caracteres ASCII.
+
+---
+
+## Decisões Arquiteturais
+
+As decisões abaixo foram tomadas considerando o contexto de projeto: um case para portfólio com foco em técnicas modernas, mantendo custo zero de infraestrutura.
+
+| Decisão            | Justificativa                                   |
+| ------------------ | ----------------------------------------------- |
+| Monorepo           | Facilita desenvolvimento local e versionamento  |
+| API REST           | Simples, stateless, amplamente suportado        |
+| SPA                | UX fluida, separação clara de responsabilidades |
+| PostgreSQL         | ACID compliance, JSON support, escalabilidade   |
+| CDN para assets    | Performance global, offload do servidor         |
+| Serviços separados | Cada componente otimizado para sua função       |
+
+---
+
+**Última revisão:** 29/01/2026
