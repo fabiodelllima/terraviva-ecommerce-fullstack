@@ -1,6 +1,6 @@
 # ROADMAP
 
-**Versão:** 0.4.0
+**Versão:** 0.5.0
 
 ---
 
@@ -39,18 +39,22 @@ A segunda fase modernizou o tooling e eliminou débito técnico acumulado. A mig
 
 ---
 
-## Fase 3: DevOps Foundation
+## Fase 3: DevOps Foundation - Em Andamento
 
-**Período:** Fevereiro 2026
+**Período:** Janeiro-Fevereiro 2026
 
 Esta fase estabelece a infraestrutura de DevOps necessária para desenvolvimento profissional. Containerização garante consistência entre ambientes, CI/CD automatiza validações, e observabilidade permite monitorar a aplicação em produção.
 
-### Containerização
+### Containerização - Concluída
 
-- [ ] Dockerfile (backend)
-- [ ] Dockerfile (frontend)
-- [ ] docker-compose.yml (ambiente dev)
-- [ ] .dockerignore
+- [x] Dockerfile (backend) - Multi-stage, non-root user
+- [x] Dockerfile (frontend) - Multi-stage, Nginx Alpine
+- [x] compose.yaml (desenvolvimento)
+- [x] compose.prod.yaml (produção)
+- [x] .dockerignore (raiz e serviços)
+- [x] docker-entrypoint.sh (migrations/collectstatic)
+- [x] nginx.conf (SPA routing, gzip, cache)
+- [x] docs/DOCKER.md
 
 ### CI/CD
 

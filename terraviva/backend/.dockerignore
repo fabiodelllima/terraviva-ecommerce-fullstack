@@ -1,0 +1,55 @@
+# =============================================================================
+# Terra Viva Backend - Docker Ignore
+# =============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Static and Media (built at runtime)
+staticfiles/
+media/uploads/*
+!media/uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# Version Control
+.git
+.gitignore
+
+# Documentation
+*.md
+
+# Tests (optional: include if you want to run tests in container)
+# tests/
+# *_test.py
+# test_*.py
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
