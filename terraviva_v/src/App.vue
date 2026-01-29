@@ -218,9 +218,13 @@ strong {
 }
 
 #custom-logo {
+  white-space: nowrap;
+  gap: 0;
   font-family: "Montserrat Alternates", sans-serif;
   color: hsl(141, 53%, 53%);
   font-size: 2.5em;
+  display: inline;
+  gap: 0;
 }
 
 /* NAVBAR HOVER LINKS */
