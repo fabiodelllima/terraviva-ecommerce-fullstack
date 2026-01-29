@@ -8,6 +8,75 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ---
 
 ## [Unreleased]
+## [0.3.0] - 2026-01-29
+
+### Contexto
+
+Migração completa do build system de Vue CLI para Vite, eliminando todas as vulnerabilidades do frontend e atualizando o framework CSS Bulma para versão 1.0.
+
+### Adicionado
+
+- **Vite Build System**
+  - `vite.config.js` com proxy para API em desenvolvimento
+  - Suporte a `import.meta.env` para variáveis de ambiente
+  - Hot Module Replacement (HMR) otimizado
+  - Build de produção ~3s (vs ~30s com Vue CLI)
+
+- **CI/CD Keep-Alive**
+  - GitHub Actions workflow para ping diário do Supabase
+  - Previne pausa automática por inatividade (7 dias)
+  - Ping do Render para manter serviço ativo
+
+### Modificado
+
+- **Frontend Dependencies**
+  - Vue CLI => Vite 6.4.1
+  - Vue: 3.2.13 => 3.5.13
+  - Vue Router: 4.0.11 => 4.5.0
+  - Vuex: 4.0.2 => 4.1.0
+  - Bulma: 0.9.4 => 1.0.2
+  - Vulnerabilidades: 8 => 0
+
+- **Build Configuration**
+  - `index.html` movido para raiz do projeto (requisito Vite)
+  - Imports com extensão `.vue` explícita
+  - Variáveis de ambiente: `VUE_APP_*` => `VITE_*`
+
+- **Estilos**
+  - Correções para compatibilidade Bulma 1.0
+  - Fix de cores em botões `.is-success` e `.is-outlined`
+  - Fix de background em `.navbar-item` ativo
+  - Logo header com `display: inline` (fix espaçamento)
+
+- **Repositório**
+  - Renomeado: `projeto-terraviva` => `terraviva-ecommerce-fullstack`
+
+### Removido
+
+- Vue CLI e plugins (`@vue/cli-service`, `@vue/cli-plugin-*`)
+- `babel.config.js` (Vite usa esbuild)
+- `vue.config.js` (substituído por `vite.config.js`)
+- Dependências deprecated do Webpack
+
+### Corrigido
+
+- Espaçamento no logo "terraviva" no header
+- Cores de botões e ícones para Bulma 1.0
+- Router usando `import.meta.env.BASE_URL`
+
+### Segurança
+
+- **Frontend:** 0 vulnerabilidades (era 8 moderate)
+- Todas as dependências atualizadas para versões seguras
+
+### Infraestrutura
+
+- **Build:** Vite 6.4.1 (substituiu Vue CLI 5.x)
+- **Frontend:** Vercel com `VITE_API_URL` configurado
+- **Repositório:** github.com/fabiodelllima/terraviva-ecommerce-fullstack
+
+---
+
 
 ### Em Desenvolvimento
 
@@ -189,5 +258,5 @@ Projeto entregue com sucesso à ONG, demonstrando viabilidade técnica e impacto
 
 ---
 
-**Última atualização:** 11/01/2026  
-**Versão atual:** 2.1.0
+**Última atualização:** 29/01/2026  
+**Versão atual:** 0.3.0
