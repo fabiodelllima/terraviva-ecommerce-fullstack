@@ -1,6 +1,6 @@
 # ARCHITECTURE
 
-**Versão:** 0.4.0
+**Versão:** 0.5.0
 
 ---
 
@@ -46,7 +46,7 @@ O projeto utiliza ferramentas atualizadas e bem estabelecidas, priorizando produ
 | Runtime  | Python                | 3.14   | Versão mais recente, melhor performance |
 | Backend  | Django                | 6.0.1  | Framework maduro, batteries included    |
 | API      | Django REST Framework | 3.15.2 | Padrão de facto para APIs Django        |
-| Auth     | djoser                | 2.2.3  | Endpoints de auth prontos               |
+| Auth     | djoser                | 2.3.0  | Endpoints de auth prontos               |
 | Payments | Stripe                | 11.3.0 | Líder de mercado em pagamentos          |
 | Frontend | Vue.js                | 3.5.13 | Reativo, progressivo, curva suave       |
 | Build    | Vite                  | 6.4.1  | Build rápido, HMR instantâneo           |
@@ -86,6 +86,41 @@ O Supabase Storage não aceita caracteres especiais em nomes de arquivo (acentos
 
 ---
 
+## CI/CD Pipeline
+
+O projeto utiliza GitHub Actions para automação de integração contínua. O pipeline garante que todo código enviado ao repositório seja validado automaticamente através de linting e testes, mantendo a qualidade e consistência do codebase.
+
+O workflow é acionado em pushes e pull requests para as branches `main` e `develop`. A estrutura separa verificações de backend e frontend em jobs independentes, permitindo execução paralela e feedback rápido.
+
+| Job              | Descrição                              | Dependência   |
+| ---------------- | -------------------------------------- | ------------- |
+| `backend-lint`   | Verifica estilo e erros com Ruff       | -             |
+| `backend-test`   | Executa testes com pytest e PostgreSQL | backend-lint  |
+| `frontend-lint`  | Verifica código Vue.js com ESLint      | -             |
+| `frontend-build` | Compila aplicação com Vite             | frontend-lint |
+
+### Ferramentas de Qualidade
+
+O backend utiliza Ruff como linter e formatter unificado, substituindo ferramentas como flake8, isort e black com melhor performance. Os testes rodam com pytest em um container PostgreSQL efêmero no CI.
+
+| Ferramenta | Escopo   | Função                    |
+| ---------- | -------- | ------------------------- |
+| Ruff       | Backend  | Linter e formatter Python |
+| Pytest     | Backend  | Framework de testes       |
+| ESLint     | Frontend | Linter JavaScript/Vue     |
+| Vite       | Frontend | Build e bundling          |
+
+### Pre-commit Hooks
+
+O projeto utiliza pre-commit para executar verificações automaticamente antes de cada commit. Para instalar os hooks localmente:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+---
+
 ## Decisões Arquiteturais
 
 As decisões abaixo foram tomadas considerando o contexto de projeto: um case para portfólio com foco em técnicas modernas, mantendo custo zero de infraestrutura.
@@ -98,7 +133,9 @@ As decisões abaixo foram tomadas considerando o contexto de projeto: um case pa
 | PostgreSQL         | ACID compliance, JSON support, escalabilidade   |
 | CDN para assets    | Performance global, offload do servidor         |
 | Serviços separados | Cada componente otimizado para sua função       |
+| Ruff over Black    | Ferramenta unificada, 10-100x mais rápida       |
+| GitHub Actions     | CI/CD integrado ao repositório, gratuito        |
 
 ---
 
-**Última revisão:** 29/01/2026
+**Última revisão:** 30/01/2026
