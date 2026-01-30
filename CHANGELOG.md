@@ -1,9 +1,9 @@
 # CHANGELOG
 
-Todas as mudanças notáveis do projeto Terra Viva serão documentadas neste arquivo.
+All notable changes to the Terra Viva project will be documented in this file.
 
-O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
-e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
@@ -11,104 +11,171 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ---
 
+## [0.6.0] - 2026-01-30
+
+### Context
+
+Complete CI/CD implementation with GitHub Actions, security vulnerability fixes, code quality tooling setup (linting, formatting, type checking), and automated test addition.
+
+### Added
+
+- **CI/CD Pipeline (GitHub Actions)**
+  - Workflow `.github/workflows/ci.yml` with 4 parallel jobs
+  - Backend Lint: Ruff (linter + formatter) + Pyright (type checking)
+  - Backend Test: pytest with PostgreSQL 16-alpine service container
+  - Frontend Lint: ESLint + Prettier
+  - Frontend Build: Vite production build
+
+- **Quality Tools - Backend**
+  - Ruff configured in `pyproject.toml` (DJ, B, UP, I rules)
+  - Pyright for type checking with Django-friendly rules
+  - pytest-django with coverage reporting
+  - `config/settings_test.py` for SQLite-based testing
+
+- **Quality Tools - Frontend**
+  - ESLint 9 with eslint-plugin-vue (flat config)
+  - Prettier with eslint-config-prettier integration
+  - Scripts: `lint`, `lint:fix`, `format`, `format:check`
+
+- **Pre-commit Hooks**
+  - `.pre-commit-config.yaml` with Ruff, Pyright, ESLint, Prettier
+  - General hooks: trailing-whitespace, end-of-file-fixer
+
+- **Automated Tests**
+  - `apps/product/tests.py`: smoke tests for product endpoints
+  - `apps/order/tests.py`: smoke tests for order endpoints
+  - `api_client` fixture in `conftest.py`
+
+### Changed
+
+- **Backend Code Quality**
+  - Imports organized (isort via Ruff)
+  - Trailing whitespace and newlines fixed
+  - Exception chaining with `raise from None`
+  - Modernized f-strings and format specifiers
+  - `warnings.warn()` with stacklevel=2
+
+- **Frontend Code Quality**
+  - Code formatted with Prettier (single quotes, no semicolons)
+  - Unused imports removed
+  - Unused variables prefixed with underscore
+
+### Security
+
+- **Dependencies Updated (5 CVEs fixed)**
+  - djoser: 2.2.3 → 2.3.0 (CVE-2024-21543: Authentication Bypass)
+  - djangorestframework-simplejwt: 5.3.1 → 5.5.1 (CVE-2024-22513: Privilege Management)
+  - Jinja2: 3.1.5 → 3.1.6 (CVE-2025-27516: Sandbox Breakout)
+  - requests: 2.32.3 → 2.32.4 (CVE-2024-47081: Credential Leak)
+  - social-auth-app-django: 5.4.2 → 5.6.0 (CVE-2025-61783: Unsafe Association)
+
+### Infrastructure
+
+- **CI/CD:** GitHub Actions (4 jobs, ~1-2min total)
+- **Linting:** Ruff 0.9.3, ESLint 9.18, Prettier 4.0
+- **Type Checking:** Pyright 1.1.391
+- **Testing:** pytest 8.3.4, pytest-django 4.9.0, pytest-cov 6.0.0
+
+---
+
 ## [0.5.0] - 2026-01-29
 
-### Contexto
+### Context
 
-Implementação de containerização completa do projeto com Docker e Docker Compose, seguindo as melhores práticas oficiais. Estabelece base para CI/CD e ambientes consistentes entre desenvolvimento e produção.
+Complete project containerization with Docker and Docker Compose, following official best practices. Establishes foundation for CI/CD and consistent environments between development and production.
 
-### Adicionado
+### Added
 
-- **Dockerfiles Multi-Stage**
-  - `terraviva/backend/Dockerfile` com builder stage para wheels Python
-  - `terraviva/frontend/Dockerfile` com Node build stage e Nginx production
-  - Non-root users (UID 10001) para segurança
-  - Health checks em todos os containers
+- **Multi-Stage Dockerfiles**
+  - `terraviva/backend/Dockerfile` with builder stage for Python wheels
+  - `terraviva/frontend/Dockerfile` with Node build stage and Nginx production
+  - Non-root users (UID 10001) for security
+  - Health checks on all containers
 
 - **Docker Compose**
-  - `compose.yaml` para desenvolvimento com hot reload
-  - `compose.prod.yaml` com overrides de produção
-  - Networks isoladas: `backend-network` e `frontend-network`
-  - Volumes nomeados para persistência de dados
+  - `compose.yaml` for development with hot reload
+  - `compose.prod.yaml` with production overrides
+  - Isolated networks: `backend-network` and `frontend-network`
+  - Named volumes for data persistence
 
-- **Configurações de Suporte**
-  - `terraviva/backend/docker-entrypoint.sh` para migrations e collectstatic
-  - `terraviva/frontend/nginx.conf` otimizado para SPA
-  - `.dockerignore` na raiz e em cada serviço
-  - `docs/DOCKER.md` com documentação completa
+- **Support Configurations**
+  - `terraviva/backend/docker-entrypoint.sh` for migrations and collectstatic
+  - `terraviva/frontend/nginx.conf` optimized for SPA
+  - `.dockerignore` at root and in each service
+  - `docs/DOCKER.md` with complete documentation
 
-### Modificado
+### Changed
 
-- Estrutura de arquivos reorganizada para suportar contextos Docker separados
+- File structure reorganized to support separate Docker contexts
 
-### Infraestrutura
+### Infrastructure
 
-- **PostgreSQL:** 16-alpine com health checks
+- **PostgreSQL:** 16-alpine with health checks
 - **Backend:** Python 3.13-slim + Gunicorn (prod) / runserver (dev)
 - **Frontend:** Node 20-alpine (build) + Nginx Alpine (serve)
-- **Networks:** Isolamento backend-network / frontend-network
+- **Networks:** backend-network / frontend-network isolation
 - **Volumes:** postgres_data, backend_static, backend_media
 
 ---
 
 ## [0.4.0] - 2026-01-29
 
-### Contexto
+### Context
 
-Reorganização completa da estrutura do projeto em monorepo, separando backend e frontend em diretórios dedicados. Atualização de toda a documentação técnica para padrão profissional.
+Complete project structure reorganization into monorepo, separating backend and frontend into dedicated directories. Updated all technical documentation to professional standards.
 
-### Adicionado
+### Added
 
-- Estrutura monorepo: `terraviva/backend` e `terraviva/frontend`
-- `docs/DEPLOYMENT.md` com configuração de infraestrutura
-- Prosa introdutória em todas as seções de documentação
+- Monorepo structure: `terraviva/backend` and `terraviva/frontend`
+- `docs/DEPLOYMENT.md` with infrastructure configuration
+- Introductory prose in all documentation sections
 
-### Modificado
+### Changed
 
-- **Estrutura do Projeto**
+- **Project Structure**
   - `order/`, `product/` => `terraviva/backend/apps/`
   - `terraviva/` (config) => `terraviva/backend/config/`
   - `terraviva_v/` => `terraviva/frontend/`
   - `requirements.txt` => `terraviva/backend/requirements/base.txt`
 
-- **Imports e Configurações**
-  - Apps registrados como `apps.product`, `apps.order`
-  - `DJANGO_SETTINGS_MODULE` atualizado para `config.settings`
-  - Todos os imports internos atualizados
+- **Imports and Configurations**
+  - Apps registered as `apps.product`, `apps.order`
+  - `DJANGO_SETTINGS_MODULE` updated to `config.settings`
+  - All internal imports updated
 
-- **Documentação**
-  - README.md com seções profissionais e prosa
-  - ARCHITECTURE.md focado em estado atual
-  - ROADMAP.md com fases detalhadas
-  - ENVIRONMENT.md atualizado para nova estrutura
+- **Documentation**
+  - README.md with professional sections and prose
+  - ARCHITECTURE.md focused on current state
+  - ROADMAP.md with detailed phases
+  - ENVIRONMENT.md updated for new structure
 
-### Removido
+### Removed
 
-- Arquivos Vue CLI obsoletos (`babel.config.js`, `vue.config.js`)
-- Estrutura flat de diretórios na raiz
+- Obsolete Vue CLI files (`babel.config.js`, `vue.config.js`)
+- Flat directory structure at root
 
 ---
 
 ## [0.3.0] - 2026-01-29
 
-### Contexto
+### Context
 
-Migração completa do build system de Vue CLI para Vite, eliminando todas as vulnerabilidades do frontend e atualizando o framework CSS Bulma para versão 1.0.
+Complete migration of build system from Vue CLI to Vite, eliminating all frontend vulnerabilities and updating Bulma CSS framework to version 1.0.
 
-### Adicionado
+### Added
 
 - **Vite Build System**
-  - `vite.config.js` com proxy para API em desenvolvimento
-  - Suporte a `import.meta.env` para variáveis de ambiente
-  - Hot Module Replacement (HMR) otimizado
-  - Build de produção ~3s (vs ~30s com Vue CLI)
+  - `vite.config.js` with proxy for API in development
+  - Support for `import.meta.env` for environment variables
+  - Optimized Hot Module Replacement (HMR)
+  - Production build ~3s (vs ~30s with Vue CLI)
 
 - **CI/CD Keep-Alive**
-  - GitHub Actions workflow para ping diário do Supabase
-  - Previne pausa automática por inatividade (7 dias)
-  - Ping do Render para manter serviço ativo
+  - GitHub Actions workflow for daily Supabase ping
+  - Prevents automatic pause due to inactivity (7 days)
+  - Render ping to keep service active
 
-### Modificado
+### Changed
 
 - **Frontend Dependencies**
   - Vue CLI => Vite 6.4.1
@@ -116,163 +183,156 @@ Migração completa do build system de Vue CLI para Vite, eliminando todas as vu
   - Vue Router: 4.0.11 => 4.5.0
   - Vuex: 4.0.2 => 4.1.0
   - Bulma: 0.9.4 => 1.0.2
-  - Vulnerabilidades: 8 => 0
+  - Vulnerabilities: 8 => 0
 
 - **Build Configuration**
-  - `index.html` movido para raiz do projeto (requisito Vite)
-  - Imports com extensão `.vue` explícita
-  - Variáveis de ambiente: `VUE_APP_*` => `VITE_*`
+  - `index.html` moved to project root (Vite requirement)
+  - Imports with explicit `.vue` extension
+  - Environment variables: `VUE_APP_*` => `VITE_*`
 
-- **Estilos**
-  - Correções para compatibilidade Bulma 1.0
-  - Fix de cores em botões `.is-success` e `.is-outlined`
-  - Fix de background em `.navbar-item` ativo
-  - Logo header com `display: inline` (fix espaçamento)
+- **Styles**
+  - Fixes for Bulma 1.0 compatibility
+  - Color fix for `.is-success` and `.is-outlined` buttons
+  - Background fix for active `.navbar-item`
+  - Header logo with `display: inline` (spacing fix)
 
-- **Repositório**
-  - Renomeado: `projeto-terraviva` => `terraviva-ecommerce-fullstack`
+- **Repository**
+  - Renamed: `projeto-terraviva` => `terraviva-ecommerce-fullstack`
 
-### Removido
+### Removed
 
-- Vue CLI e plugins (`@vue/cli-service`, `@vue/cli-plugin-*`)
-- `babel.config.js` (Vite usa esbuild)
-- `vue.config.js` (substituído por `vite.config.js`)
-- Dependências deprecated do Webpack
+- Vue CLI and plugins (`@vue/cli-service`, `@vue/cli-plugin-*`)
+- `babel.config.js` (Vite uses esbuild)
+- `vue.config.js` (replaced by `vite.config.js`)
+- Deprecated Webpack dependencies
 
-### Corrigido
+### Fixed
 
-- Espaçamento no logo "terraviva" no header
-- Cores de botões e ícones para Bulma 1.0
-- Router usando `import.meta.env.BASE_URL`
+- Spacing in "terraviva" logo in header
+- Button and icon colors for Bulma 1.0
+- Router using `import.meta.env.BASE_URL`
 
-### Segurança
+### Security
 
-- **Frontend:** 0 vulnerabilidades (era 8 moderate)
-- Todas as dependências atualizadas para versões seguras
+- **Frontend:** 0 vulnerabilities (was 8 moderate)
+- All dependencies updated to secure versions
 
-### Infraestrutura
+### Infrastructure
 
-- **Build:** Vite 6.4.1 (substituiu Vue CLI 5.x)
-- **Frontend:** Vercel com `VITE_API_URL` configurado
-- **Repositório:** github.com/fabiodelllima/terraviva-ecommerce-fullstack
-
----
-
-### Em Desenvolvimento
-
-- Documentação BUSINESS_RULES.md
-- Documentação DEPLOYMENT.md
+- **Build:** Vite 6.4.1 (replaced Vue CLI 5.x)
+- **Frontend:** Vercel with `VITE_API_URL` configured
+- **Repository:** github.com/fabiodelllima/terraviva-ecommerce-fullstack
 
 ---
 
 ## [2.1.0] - 2026-01-11
 
-### Contexto
+### Context
 
-Implementação de armazenamento persistente de mídia via Supabase Storage, resolvendo o problema de arquivos efêmeros no Render.com. Inclui upgrade do Django para versão 5.2.10 devido a incompatibilidades com Python 3.14.
+Implementation of persistent media storage via Supabase Storage, solving the ephemeral files problem on Render.com. Includes Django upgrade to version 5.2.10 due to Python 3.14 incompatibilities.
 
-### Adicionado
+### Added
 
 - **Supabase Storage Integration**
-  - Custom storage backend (`terraviva/storage.py`) para Supabase
-  - Upload de imagens diretamente para bucket `media/uploads/`
-  - URLs públicas via CDN Supabase (285 POPs globalmente)
-  - Fallback gracioso para imagens legadas
+  - Custom storage backend (`terraviva/storage.py`) for Supabase
+  - Image upload directly to `media/uploads/` bucket
+  - Public URLs via Supabase CDN (285 POPs globally)
+  - Graceful fallback for legacy images
 
-- **Configuração de STORAGES**
-  - Django 5.2+ STORAGES dict para gerenciamento de storage
-  - WhiteNoise mantido para arquivos estáticos
-  - Supabase para arquivos de mídia (uploads)
+- **STORAGES Configuration**
+  - Django 5.2+ STORAGES dict for storage management
+  - WhiteNoise maintained for static files
+  - Supabase for media files (uploads)
 
-### Modificado
+### Changed
 
 - **Django Upgrade**
-  - Django: 4.2.17 => 5.2.10 (compatibilidade Python 3.14)
-  - Correção do bug `AttributeError: 'super' object has no attribute 'dicts'`
-  - Configuração migrada de `DEFAULT_FILE_STORAGE` para `STORAGES`
+  - Django: 4.2.17 => 5.2.10 (Python 3.14 compatibility)
+  - Fixed `AttributeError: 'super' object has no attribute 'dicts'` bug
+  - Configuration migrated from `DEFAULT_FILE_STORAGE` to `STORAGES`
 
 - **Product Model**
-  - Método `make_thumbnail()` corrigido (path duplication fix)
-  - Métodos `get_image()` e `get_thumbnail()` com error handling
-  - `verbose_name_plural` corrigido para "Produtos"
+  - `make_thumbnail()` method fixed (path duplication fix)
+  - `get_image()` and `get_thumbnail()` methods with error handling
+  - `verbose_name_plural` corrected to "Produtos"
 
 - **Frontend Deploy**
-  - Migração de Netlify para Vercel
-  - Configuração `vercel.json` para SPA routing
+  - Migration from Netlify to Vercel
+  - `vercel.json` configuration for SPA routing
 
 - **Dependencies**
-  - supabase: 2.27.1 (novo)
-  - storage3: 2.27.1 (novo)
-  - Pillow: 12.1.0 (mantido)
+  - supabase: 2.27.1 (new)
+  - storage3: 2.27.1 (new)
+  - Pillow: 12.1.0 (maintained)
 
-### Removido
+### Removed
 
-- Campo `image_url` do model Product (redundante com Supabase URLs)
-- Configuração `DEFAULT_FILE_STORAGE` (deprecated Django 5.2)
-- Configuração `STATICFILES_STORAGE` duplicada
-- `netlify.toml` (migrado para Vercel)
-- `Procfile` (era para Heroku, não utilizado)
+- `image_url` field from Product model (redundant with Supabase URLs)
+- `DEFAULT_FILE_STORAGE` configuration (deprecated Django 5.2)
+- Duplicate `STATICFILES_STORAGE` configuration
+- `netlify.toml` (migrated to Vercel)
+- `Procfile` (was for Heroku, not used)
 
-### Corrigido
+### Fixed
 
-- Incompatibilidade Python 3.14 + Django 4.2/5.1 (template context bug)
-- Path duplication em thumbnails (`uploads/uploads/file.jpg`)
-- Error handling para imagens legadas (404 no Supabase)
+- Python 3.14 + Django 4.2/5.1 incompatibility (template context bug)
+- Path duplication in thumbnails (`uploads/uploads/file.jpg`)
+- Error handling for legacy images (404 on Supabase)
 
-### Infraestrutura
+### Infrastructure
 
-- **Backend:** Render.com (<https://terraviva-api-bg8s.onrender.com\>\)
-- **Frontend:** Vercel (<https://terraviva.vercel.app\>\)
+- **Backend:** Render.com (https://terraviva-api-bg8s.onrender.com)
+- **Frontend:** Vercel (https://terraviva.vercel.app)
 - **Database:** Supabase PostgreSQL (500MB free tier)
-- **Storage:** Supabase Storage (1GB free tier, CDN global)
+- **Storage:** Supabase Storage (1GB free tier, global CDN)
 
 ---
 
 ## [2.0.1] - 2026-01-09
 
-### Segurança
+### Security
 
-- **CRÍTICO:** SECRET_KEY removida do código-fonte e movida para variável de ambiente
-- **CRÍTICO:** STRIPE_SECRET_KEY removida do código-fonte e movida para variável de ambiente
-- DEBUG agora configurável via ambiente (evita DEBUG=True em produção)
-- ALLOWED_HOSTS agora configurável via ambiente (evita host poisoning)
-- Configurados security headers para produção (XSS, CSRF, SSL)
+- **CRITICAL:** SECRET_KEY removed from source code and moved to environment variable
+- **CRITICAL:** STRIPE_SECRET_KEY removed from source code and moved to environment variable
+- DEBUG now configurable via environment (prevents DEBUG=True in production)
+- ALLOWED_HOSTS now configurable via environment (prevents host poisoning)
+- Security headers configured for production (XSS, CSRF, SSL)
 
-### Adicionado
+### Added
 
-- python-dotenv para gerenciamento de variáveis de ambiente
-- .env.example como template de configuração
-- docs/ENVIRONMENT.md com guia de configuração
+- python-dotenv for environment variable management
+- .env.example as configuration template
+- docs/ENVIRONMENT.md with configuration guide
 
-### Modificado
+### Changed
 
-- Pillow: 10.4.0 => 12.1.0 (compatibilidade Python 3.14)
-- .gitignore atualizado para excluir arquivos .env
+- Pillow: 10.4.0 => 12.1.0 (Python 3.14 compatibility)
+- .gitignore updated to exclude .env files
 
-### Removido
+### Removed
 
-- django-on-heroku (descontinuado)
-- Secrets hardcoded do settings.py
+- django-on-heroku (discontinued)
+- Hardcoded secrets from settings.py
 
 ---
 
 ## [2.0.0] - 2026-01-07
 
-### Contexto
+### Context
 
-Início da **revitalização completa** do projeto após 4 anos sem manutenção (2022-2025). O objetivo é transformar o projeto acadêmico de 2021 em case para portfólio profissional de produção.
+Beginning of **complete project revitalization** after 4 years without maintenance (2022-2025). The goal is to transform the 2021 academic project into a professional production portfolio case.
 
-### Adicionado
+### Added
 
-- **Documentação Profissional Completa**
-  - README.md reformulado com metodologia hierárquica
-  - docs/ROADMAP.md com planejamento Fase 1, 2, 3
-  - docs/ARCHITECTURE.md com análise estrutural
-  - CHANGELOG.md seguindo Keep a Changelog format
+- **Complete Professional Documentation**
+  - README.md reformulated with hierarchical methodology
+  - docs/ROADMAP.md with Phase 1, 2, 3 planning
+  - docs/ARCHITECTURE.md with structural analysis
+  - CHANGELOG.md following Keep a Changelog format
   - LICENSE (MIT)
-  - Estrutura docs/ criada
+  - docs/ structure created
 
-### Modificado
+### Changed
 
 - **Backend Dependencies (Python)**
   - Python: 3.9 => 3.14
@@ -284,53 +344,53 @@ Início da **revitalização completa** do projeto após 4 anos sem manutenção
   - Stripe: 4.2.0 => 11.3.0
 
 - **Frontend Dependencies (npm)**
-  - Resolvidas 20 vulnerabilidades críticas/altas
-  - Vulnerabilidades: 68 => 8 (todas moderate, dev-only)
+  - Resolved 20 critical/high vulnerabilities
+  - Vulnerabilities: 68 => 8 (all moderate, dev-only)
 
-### Segurança
+### Security
 
-- Resolvidas 20 de 28 vulnerabilidades npm (68 => 8)
-- 8 vulnerabilidades restantes: moderate severity, dev-only
+- Resolved 20 of 28 npm vulnerabilities (68 => 8)
+- 8 remaining vulnerabilities: moderate severity, dev-only
 
 ---
 
 ## [1.0.0] - 2021-12-XX
 
-### Contexto
+### Context
 
-Release inicial do projeto acadêmico **Coding4Hope**. Plataforma e-commerce desenvolvida para automatizar vendas de uma ONG, substituindo processos manuais por sistema online completo.
+Initial release of the **Coding4Hope** academic project. E-commerce platform developed to automate sales for an NGO, replacing manual processes with a complete online system.
 
-### Adicionado
+### Added
 
-- **Backend Django**
+- **Django Backend**
   - Django 4.1.2 + Django REST Framework
   - Apps: `product`, `order`
   - Models: Product, Category, Order, OrderItem
-  - API REST completa (CRUD produtos, checkout, auth)
-  - Admin panel integrado
-  - Integração Stripe (pagamentos)
+  - Complete REST API (CRUD products, checkout, auth)
+  - Integrated admin panel
+  - Stripe integration (payments)
 
-- **Frontend Vue.js**
+- **Vue.js Frontend**
   - Vue.js 3.2.13 + Vue Router + Vuex
-  - 10 páginas: Home, Product, Category, Search, Cart, Checkout, Success, Login, SignUp, MyAccount
-  - Integração Stripe Elements
+  - 10 pages: Home, Product, Category, Search, Cart, Checkout, Success, Login, SignUp, MyAccount
+  - Stripe Elements integration
   - CSS framework: Bulma
 
-### Impacto
+### Impact
 
-Projeto entregue com sucesso à ONG, demonstrando viabilidade técnica e impacto social mensurável.
-
----
-
-## Legenda
-
-- `Adicionado`: Novas funcionalidades
-- `Modificado`: Mudanças em funcionalidades existentes
-- `Removido`: Funcionalidades removidas
-- `Corrigido`: Correções de bugs
-- `Segurança`: Correções de vulnerabilidades
+Project successfully delivered to the NGO, demonstrating technical viability and measurable social impact.
 
 ---
 
-**Última atualização:** 29/01/2026  
-**Versão atual:** 0.5.0
+## Legend
+
+- `Added`: New features
+- `Changed`: Changes to existing features
+- `Removed`: Removed features
+- `Fixed`: Bug fixes
+- `Security`: Vulnerability fixes
+
+---
+
+**Last updated:** 2026-01-30  
+**Current version:** 0.6.0

@@ -1,6 +1,6 @@
 # ROADMAP
 
-**Versão:** 0.5.0
+**Versão:** 0.6.0
 
 ---
 
@@ -39,11 +39,11 @@ A segunda fase modernizou o tooling e eliminou débito técnico acumulado. A mig
 
 ---
 
-## Fase 3: DevOps Foundation - Em Andamento
+## Fase 3: DevOps Foundation - Concluída
 
-**Período:** Janeiro-Fevereiro 2026
+**Período:** Janeiro 2026
 
-Esta fase estabelece a infraestrutura de DevOps necessária para desenvolvimento profissional. Containerização garante consistência entre ambientes, CI/CD automatiza validações, e observabilidade permite monitorar a aplicação em produção.
+Esta fase estabeleceu a infraestrutura de DevOps necessária para desenvolvimento profissional. Containerização garante consistência entre ambientes, CI/CD automatiza validações, e ferramentas de qualidade mantêm padrões de código.
 
 ### Containerização - Concluída
 
@@ -56,52 +56,67 @@ Esta fase estabelece a infraestrutura de DevOps necessária para desenvolvimento
 - [x] nginx.conf (SPA routing, gzip, cache)
 - [x] docs/DOCKER.md
 
-### CI/CD
+### CI/CD - Concluída
 
-- [ ] GitHub Actions: lint + tests
-- [ ] GitHub Actions: build + deploy
+- [x] GitHub Actions workflow (4 jobs paralelos)
+- [x] Backend: Ruff lint + Pyright type check
+- [x] Backend: pytest com PostgreSQL service
+- [x] Frontend: ESLint + Prettier
+- [x] Frontend: Vite build validation
 - [ ] Branch protection rules
+- [ ] Deploy automatizado
 
-### Observabilidade
+### Qualidade de Código - Concluída
 
-- [ ] Sentry (error tracking)
-- [ ] Health check endpoints
-- [ ] Structured logging
+- [x] Ruff (linter + formatter Python)
+- [x] Pyright (type checking)
+- [x] ESLint 9 + eslint-plugin-vue
+- [x] Prettier (formatação de código)
+- [x] pre-commit hooks configurados
+- [x] pytest-django + pytest-cov
+
+### Segurança - Concluída
+
+- [x] 5 CVEs corrigidos (djoser, simplejwt, Jinja2, requests, social-auth)
+- [x] Dependabot monitoramento ativo
 
 ---
 
-## Fase 4: Qualidade de Código
+## Fase 4: Testes & Refatoração - Em Andamento
 
-**Período:** Março 2026
+**Período:** Fevereiro 2026
 
-A quarta fase implementa práticas de qualidade de código através de testes automatizados, linting e análise estática. O objetivo é atingir cobertura superior a 90% no backend e 80% no frontend.
+Esta fase expande a cobertura de testes e implementa padrões arquiteturais. O objetivo é atingir >80% de cobertura no backend e >60% no frontend, aplicando princípios de Clean Architecture.
 
-### Testing
+### Testes
 
-- [ ] pytest + pytest-django
-- [ ] Coverage >90% backend
+- [x] pytest + pytest-django configurado
+- [x] Smoke tests básicos (4 testes)
+- [ ] Testes unitários para models
+- [ ] Testes unitários para serializers
+- [ ] Testes de integração para endpoints
+- [ ] Coverage >80% backend
 - [ ] Vitest (frontend)
-- [ ] Cypress (e2e)
-- [ ] Coverage >80% frontend
-
-### Code Quality
-
-- [ ] ruff (linter Python)
-- [ ] mypy (type hints)
-- [ ] ESLint + Prettier
-- [ ] pre-commit hooks
+- [ ] Coverage >60% frontend
 
 ### Refatoração
 
 - [ ] Service Layer pattern
 - [ ] Repository pattern
-- [ ] SOLID principles
+- [ ] Aplicação de princípios SOLID
+- [ ] Expansão de type hints
+
+### Documentação
+
+- [ ] Documentação da API (drf-spectacular)
+- [ ] Documentação de regras de negócio
+- [ ] Architecture Decision Records (ADRs)
 
 ---
 
 ## Fase 5: UX/UI Refresh
 
-**Período:** Abril 2026
+**Período:** Março 2026
 
 Esta fase renova a interface visual do projeto, aplicando princípios modernos de design e garantindo acessibilidade. O objetivo é atingir score superior a 90 no Lighthouse.
 
@@ -110,23 +125,38 @@ Esta fase renova a interface visual do projeto, aplicando princípios modernos d
 - [ ] Acessibilidade (WCAG 2.1)
 - [ ] Lighthouse score >90
 - [ ] Loading/error/empty states
+- [ ] Melhorias de responsividade
 
 ---
 
 ## Fase 6: API Evolution
 
-**Período:** Maio 2026
+**Período:** Abril 2026
 
 A sexta fase evolui a API REST para GraphQL, oferecendo flexibilidade para o frontend e demonstrando conhecimento em diferentes paradigmas de API. A migração de Vuex para Pinia moderniza o gerenciamento de estado.
 
 - [ ] GraphQL (graphene-django)
 - [ ] Apollo Client
 - [ ] Vuex para Pinia
-- [ ] TypeScript (gradual)
+- [ ] TypeScript (adoção gradual)
 
 ---
 
-## Fase 7: Event-Driven Architecture
+## Fase 7: Observabilidade
+
+**Período:** Maio 2026
+
+Esta fase implementa observabilidade abrangente para monitoramento em produção. Error tracking, logging estruturado e coleta de métricas permitem detecção proativa de problemas.
+
+- [ ] Sentry (error tracking)
+- [ ] Health check endpoints
+- [ ] Structured logging (structlog)
+- [ ] Prometheus metrics
+- [ ] Grafana dashboards
+
+---
+
+## Fase 8: Event-Driven Architecture
 
 **Período:** Junho-Julho 2026
 
@@ -134,12 +164,12 @@ Esta fase introduz processamento assíncrono e arquitetura orientada a eventos. 
 
 - [ ] Celery + Redis
 - [ ] Email notifications (async)
-- [ ] RabbitMQ
-- [ ] Kafka (exploração)
+- [ ] Background job processing
+- [ ] Event sourcing exploration
 
 ---
 
-## Fase 8: Infrastructure as Code
+## Fase 9: Infrastructure as Code
 
 **Período:** Agosto 2026
 
@@ -147,8 +177,8 @@ A fase final implementa orquestração de containers com Kubernetes e monitorame
 
 - [ ] Kubernetes manifests
 - [ ] Helm charts
-- [ ] Prometheus + Grafana
 - [ ] ArgoCD (GitOps)
+- [ ] Terraform (cloud resources)
 
 ---
 
@@ -156,12 +186,13 @@ A fase final implementa orquestração de containers com Kubernetes e monitorame
 
 | Métrica                  | Atual  | Meta         |
 | ------------------------ | ------ | ------------ |
-| Test Coverage (Backend)  | 0%     | >90%         |
-| Test Coverage (Frontend) | 0%     | >80%         |
+| Test Coverage (Backend)  | 30%    | >80%         |
+| Test Coverage (Frontend) | 0%     | >60%         |
 | Vulnerabilities          | 0      | 0            |
 | Lighthouse Score         | ~70    | >90          |
+| CI Pipeline Time         | ~2min  | <3min        |
 | Deploy Time              | Manual | <5min (auto) |
 
 ---
 
-**Última revisão:** 29/01/2026
+**Última revisão:** 30/01/2026
