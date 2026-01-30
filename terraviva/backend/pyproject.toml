@@ -20,8 +20,8 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings"
-python_files = ["test_*.py", "*_test.py"]
+DJANGO_SETTINGS_MODULE = "config.settings_test"
+python_files = ["test_*.py", "*_test.py", "tests.py"]
 addopts = ["-v", "--tb=short", "--strict-markers", "-ra"]
 testpaths = ["apps"]
 filterwarnings = ["ignore::DeprecationWarning"]

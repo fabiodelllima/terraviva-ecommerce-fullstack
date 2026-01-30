@@ -2,17 +2,19 @@
 
 import os
 
+os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings_test"
+os.environ.setdefault("SECRET_KEY", "test-secret-key")
+os.environ.setdefault("DEBUG", "True")
+
 import django
 import pytest
 
-
-def pytest_configure():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-    django.setup()
+django.setup()
 
 
 @pytest.fixture
 def api_client():
+    """Return DRF APIClient instance."""
     from rest_framework.test import APIClient
 
     return APIClient()
