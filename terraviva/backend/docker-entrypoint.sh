@@ -12,13 +12,13 @@ set -e
 # -----------------------------------------------------------------------------
 if [ -n "$DATABASE_URL" ]; then
     echo "[INFO] Waiting for database connection..."
-    
+
     # Extract host and port from DATABASE_URL
     # Format: postgres://user:pass@host:port/dbname
     if [[ "$DATABASE_URL" =~ @([^:]+):([0-9]+)/ ]]; then
         DB_HOST="${BASH_REMATCH[1]}"
         DB_PORT="${BASH_REMATCH[2]}"
-        
+
         # Wait up to 30 seconds for database
         for i in {1..30}; do
             if python -c "import socket; s = socket.socket(); s.settimeout(1); s.connect(('$DB_HOST', $DB_PORT)); s.close()" 2>/dev/null; then

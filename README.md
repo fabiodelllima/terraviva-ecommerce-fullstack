@@ -281,5 +281,5 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
-**Versão:** 0.6.0  
+**Versão:** 0.6.0
 **Última atualização:** 30/01/2026

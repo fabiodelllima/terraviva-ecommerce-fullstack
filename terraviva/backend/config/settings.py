@@ -122,9 +122,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS
 
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    "CORS_ALLOWED_ORIGINS", "http://localhost:8080"
-).split(",")
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:8080").split(",")
 
 CORS_ALLOW_ALL_ORIGINS = False
 
@@ -137,8 +135,7 @@ if not STRIPE_SECRET_KEY and DEBUG:
     import warnings
 
     warnings.warn(
-        "STRIPE_SECRET_KEY not configured. Payments will not work. "
-        "See docs/STRIPE_SETUP.md for setup instructions.",
+        "STRIPE_SECRET_KEY not configured. Payments will not work. See docs/STRIPE_SETUP.md for setup instructions.",
         stacklevel=2,
     )
 

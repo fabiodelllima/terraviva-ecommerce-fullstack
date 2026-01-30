@@ -31,7 +31,8 @@
             </div>
           </div>
           <hr />
-          <router-link to="/log-in" id="custom-link">Clique aqui</router-link> para entrar!
+          <router-link to="/log-in" id="custom-link">Clique aqui</router-link>
+          para entrar!
         </form>
       </div>
     </div>

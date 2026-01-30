@@ -25,7 +25,8 @@
             </div>
           </div>
           <hr />
-          <router-link to="/sign-up" id="custom-link">Clique aqui</router-link> para registrar.
+          <router-link to="/sign-up" id="custom-link">Clique aqui</router-link>
+          para registrar.
         </form>
       </div>
     </div>
