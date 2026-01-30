@@ -392,5 +392,5 @@ Project successfully delivered to the NGO, demonstrating technical viability and
 
 ---
 
-**Last updated:** 2026-01-30  
+**Last updated:** 2026-01-30
 **Current version:** 0.6.0
