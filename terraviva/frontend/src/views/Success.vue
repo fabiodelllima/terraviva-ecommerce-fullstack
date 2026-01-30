@@ -10,10 +10,10 @@
 </template>
 
 <script>
-export default {
-  name: 'Success',
-  mounted() {
-    document.title = 'Compra realizada | Terra Viva'
-  },
-}
+  export default {
+    name: 'Success',
+    mounted() {
+      document.title = 'Compra realizada | Terra Viva'
+    },
+  }
 </script>

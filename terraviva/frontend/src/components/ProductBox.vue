@@ -2,33 +2,39 @@
   <div class="column is-3">
     <div class="box">
       <figure class="image mb-4">
-        <img v-bind:src="product.get_thumbnail" width="100%" height="300"
-          style="width: 100%; height: 300px; object-fit: cover;">
+        <img
+          v-bind:src="product.get_thumbnail"
+          width="100%"
+          height="300"
+          style="width: 100%; height: 300px; object-fit: cover"
+        />
       </figure>
       <h3 class="is-size-4">{{ product.name }}</h3>
       <p class="is-size-6 has-text-grey">R${{ product.price }}</p>
-      <router-link v-bind:to="product.get_absolute_url" class="button is-dark mt-4">Ver detalhes</router-link>
+      <router-link v-bind:to="product.get_absolute_url" class="button is-dark mt-4"
+        >Ver detalhes</router-link
+      >
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'ProductBox',
-  props: {
-    product: Object
+  export default {
+    name: 'ProductBox',
+    props: {
+      product: Object,
+    },
   }
-}
 </script>
 
 <style scoped>
-.box {
-  border: 1px solid #c7c7c7;
-}
+  .box {
+    border: 1px solid #c7c7c7;
+  }
 
-.image {
-  margin-top: -1.25rem;
-  margin-left: -1.25rem;
-  margin-right: -1.25rem;
-}
+  .image {
+    margin-top: -1.25rem;
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+  }
 </style>
