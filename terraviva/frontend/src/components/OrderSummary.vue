@@ -24,20 +24,20 @@
 </template>
 
 <script>
-export default {
-  name: 'OrderSummary',
-  props: {
-    order: Object
-  },
-  methods: {
-    getItemTotal(item) {
-      return item.quantity * item.product.price
+  export default {
+    name: 'OrderSummary',
+    props: {
+      order: Object,
     },
-    orderTotalLength(order) {
-      return order.items.reduce((acc, curVal) => {
-        return acc += curVal.quantity
-      }, 0)
+    methods: {
+      getItemTotal(item) {
+        return item.quantity * item.product.price
+      },
+      orderTotalLength(order) {
+        return order.items.reduce((acc, curVal) => {
+          return (acc += curVal.quantity)
+        }, 0)
+      },
     },
   }
-}
 </script>

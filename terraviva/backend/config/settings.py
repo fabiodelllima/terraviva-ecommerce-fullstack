@@ -138,7 +138,8 @@ if not STRIPE_SECRET_KEY and DEBUG:
 
     warnings.warn(
         "STRIPE_SECRET_KEY not configured. Payments will not work. "
-        "See docs/STRIPE_SETUP.md for setup instructions."
+        "See docs/STRIPE_SETUP.md for setup instructions.",
+        stacklevel=2,
     )
 
 # Security Settings

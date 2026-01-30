@@ -23,46 +23,46 @@
 </template>
 
 <script>
-import axios from "axios";
-import ProductBox from "@/components/ProductBox.vue";
+  import axios from 'axios'
+  import ProductBox from '@/components/ProductBox.vue'
 
-export default {
-  name: "Home",
-  data() {
-    return {
-      latestProducts: [],
-    };
-  },
-  components: {
-    ProductBox,
-  },
-  mounted() {
-    this.getLatestProducts();
-    document.title = "Home | Terra Viva";
-  },
-  methods: {
-    async getLatestProducts() {
-      this.$store.commit("setIsLoading", true);
-      await axios
-        .get("/api/v1/latest-products/")
-        .then((response) => {
-          this.latestProducts = response.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      this.$store.commit("setIsLoading", false);
+  export default {
+    name: 'Home',
+    data() {
+      return {
+        latestProducts: [],
+      }
     },
-  },
-};
+    components: {
+      ProductBox,
+    },
+    mounted() {
+      this.getLatestProducts()
+      document.title = 'Home | Terra Viva'
+    },
+    methods: {
+      async getLatestProducts() {
+        this.$store.commit('setIsLoading', true)
+        await axios
+          .get('/api/v1/latest-products/')
+          .then((response) => {
+            this.latestProducts = response.data
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        this.$store.commit('setIsLoading', false)
+      },
+    },
+  }
 </script>
 
 <style>
-#custom-hero {
-  background-color: rgb(235, 235, 235);
-}
+  #custom-hero {
+    background-color: rgb(235, 235, 235);
+  }
 
-#custom-text-color {
-  color: #000;
-}
+  #custom-text-color {
+    color: #000;
+  }
 </style>
