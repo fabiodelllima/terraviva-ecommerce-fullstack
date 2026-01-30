@@ -25,6 +25,7 @@ jobs:
         run: |
           pip install ruff pyright
           pip install -r requirements/base.txt
+          pip install -r requirements/dev.txt
 
       - name: Run Ruff linter
         run: ruff check .
@@ -70,6 +71,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements/base.txt
+          pip install -r requirements/dev.txt
           pip install -r requirements/dev.txt
 
       - name: Run tests
