@@ -3,11 +3,11 @@ import { createStore } from 'vuex'
 export default createStore({
   state: {
     cart: {
-        items: [],
+      items: [],
     },
     isAuthenticated: false,
     token: '',
-    isLoading: false
+    isLoading: false,
   },
   mutations: {
     initializeStore(state) {
@@ -18,15 +18,15 @@ export default createStore({
       }
 
       if (localStorage.getItem('token')) {
-          state.token = localStorage.getItem('token')
-          state.isAuthenticated = true
+        state.token = localStorage.getItem('token')
+        state.isAuthenticated = true
       } else {
-          state.token = ''
-          state.isAuthenticated = false
-      } 
+        state.token = ''
+        state.isAuthenticated = false
+      }
     },
     addToCart(state, item) {
-      const exists = state.cart.items.filter(i => i.product.id === item.product.id)
+      const exists = state.cart.items.filter((i) => i.product.id === item.product.id)
       if (exists.length) {
         exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity)
       } else {
@@ -39,12 +39,12 @@ export default createStore({
       state.isLoading = status
     },
     setToken(state, token) {
-        state.token = token
-        state.isAuthenticated = true
-    },  
+      state.token = token
+      state.isAuthenticated = true
+    },
     removeToken(state) {
-        state.token = ''
-        state.isAuthenticated = false
+      state.token = ''
+      state.isAuthenticated = false
     },
     clearCart(state) {
       state.cart = { items: [] }
@@ -52,8 +52,6 @@ export default createStore({
       localStorage.setItem('cart', JSON.stringify(state.cart))
     },
   },
-  actions: {
-  },
-  modules: {
-  }
+  actions: {},
+  modules: {},
 })
