@@ -18,9 +18,7 @@ class LatestProductsList(APIView):
 class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
         try:
-            return Product.objects.filter(category__slug=category_slug).get(
-                slug=product_slug
-            )
+            return Product.objects.filter(category__slug=category_slug).get(slug=product_slug)
         except Product.DoesNotExist:
             raise Http404 from None
 
@@ -48,9 +46,7 @@ def search(request):
     query = request.data.get("query", "")
 
     if query:
-        products = Product.objects.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
-        )
+        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     else:
