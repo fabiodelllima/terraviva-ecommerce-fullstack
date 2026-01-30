@@ -1,44 +1,47 @@
-import stripe
-from django.conf import settings
+"""
+Order views - Controller layer.
+
+Thin controllers that delegate business logic to services.
+"""
+
 from rest_framework import authentication, permissions, status
-from rest_framework.decorators import (
-    api_view,
-    authentication_classes,
-    permission_classes,
-)
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Order
 from .serializers import MyOrderSerializer, OrderSerializer
+from .services import OrderService, PaymentError
 
 
 @api_view(["POST"])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def checkout(request):
+    """
+    Process checkout and create order.
+
+    Validates input, delegates to OrderService for business logic.
+    """
     serializer = OrderSerializer(data=request.data)
 
-    if serializer.is_valid():
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        paid_amount = sum(
-            item.get("quantity") * item.get("product").price for item in serializer.validated_data["items"]
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        order_service = OrderService()
+        order = order_service.process_checkout(
+            user=request.user,
+            validated_data=serializer.validated_data,
         )
-        try:
-            stripe.Charge.create(
-                amount=int(paid_amount * 100),
-                currency="USD",
-                description="Charge from Djackets",
-                source=serializer.validated_data["stripe_token"],
-            )
-            serializer.save(user=request.user, paid_amount=paid_amount)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+    except PaymentError as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrdersList(APIView):
+    """List orders for authenticated user."""
+
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
