@@ -1,33 +1,28 @@
-import js from "@eslint/js";
-import pluginVue from "eslint-plugin-vue";
-import globals from "globals";
+import js from '@eslint/js'
+import pluginVue from 'eslint-plugin-vue'
+import globals from 'globals'
+import prettier from 'eslint-config-prettier'
 
 export default [
   {
-    name: "app/files-to-lint",
-    files: ["**/*.{js,mjs,jsx,vue}"],
+    ignores: ['dist/**', 'node_modules/**'],
   },
-  {
-    name: "app/files-to-ignore",
-    ignores: ["**/dist/**", "**/node_modules/**"],
-  },
+  js.configs.recommended,
+  ...pluginVue.configs['flat/essential'],
+  prettier,
   {
     languageOptions: {
       globals: {
+        Stripe: 'readonly',
         ...globals.browser,
         ...globals.node,
       },
     },
-  },
-  js.configs.recommended,
-  ...pluginVue.configs["flat/essential"],
-  {
-    name: "app/rules",
     rules: {
-      "vue/multi-word-component-names": "off",
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "no-console": "off",
-      "no-debugger": "warn",
+      'vue/multi-word-component-names': 'off',
+      'no-console': 'off',
+      'no-debugger': 'warn',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
-];
+]
