@@ -31,14 +31,7 @@ exclude_lines = ["pragma: no cover", "def __repr__", "raise NotImplementedError"
 [tool.pyright]
 pythonVersion = "3.13"
 typeCheckingMode = "basic"
-# Ignore Django ORM false positives
+# Django auto-creates id field, stripe.error namespace
 reportAttributeAccessIssue = false
-reportOptionalSubscript = false
-reportOptionalMemberAccess = false
+# DRF serializer.validated_data type
 reportArgumentType = false
-reportAssignmentType = false
-reportReturnType = false
-reportIncompatibleMethodOverride = false
-reportIndexIssue = false
-reportMissingImports = false
-reportCallIssue = false
