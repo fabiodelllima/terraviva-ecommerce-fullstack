@@ -40,4 +40,5 @@ reportAssignmentType = false
 reportReturnType = false
 reportIncompatibleMethodOverride = false
 reportIndexIssue = false
+reportMissingImports = false
 reportCallIssue = false
