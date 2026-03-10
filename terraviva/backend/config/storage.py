@@ -24,21 +24,28 @@ class SupabaseStorage(Storage):
         """Get public URL for a file."""
         return f"{self.supabase_url}/storage/v1/object/public/{self.bucket_name}/{name}"
 
+    def _get_content_type(self, content: File) -> str:
+        """Determine content type from file."""
+        content_type = getattr(content, "content_type", "application/octet-stream")
+
+        filename: str | None = getattr(content, "name", None)
+        if filename:
+            filename_lower = filename.lower()
+            if filename_lower.endswith((".jpg", ".jpeg")):
+                content_type = "image/jpeg"
+            elif filename_lower.endswith(".png"):
+                content_type = "image/png"
+            elif filename_lower.endswith(".gif"):
+                content_type = "image/gif"
+            elif filename_lower.endswith(".webp"):
+                content_type = "image/webp"
+
+        return content_type
+
     def _save(self, name: str, content: File) -> str:
         """Save file to Supabase Storage."""
         file_content = content.read()
-
-        # Determine content type
-        content_type = getattr(content, "content_type", "application/octet-stream")
-        if hasattr(content, "name"):
-            if content.name.endswith(".jpg") or content.name.endswith(".jpeg"):
-                content_type = "image/jpeg"
-            elif content.name.endswith(".png"):
-                content_type = "image/png"
-            elif content.name.endswith(".gif"):
-                content_type = "image/gif"
-            elif content.name.endswith(".webp"):
-                content_type = "image/webp"
+        content_type = self._get_content_type(content)
 
         # Upload to Supabase
         self.client.storage.from_(self.bucket_name).upload(
@@ -66,8 +73,10 @@ class SupabaseStorage(Storage):
         except Exception:
             return False
 
-    def url(self, name: str) -> str:
+    def url(self, name: str | None) -> str:
         """Get public URL for file."""
+        if name is None:
+            return ""
         return self._get_public_url(name)
 
     def size(self, name: str) -> int:
