@@ -1,67 +1,19 @@
 """
-Order services - Business logic layer.
+Order services - Application layer.
 
-This module contains the business logic for order processing,
-separating concerns from views (controllers) and models (entities).
+Business logic for order processing, coordinating between
+domain entities, validators, and infrastructure gateways.
 """
 
 from decimal import Decimal
 from typing import Any
 
-import stripe
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import transaction
 
+from .gateways import StripeGateway
 from .models import Order, OrderItem
-
-
-class PaymentError(Exception):
-    """Raised when payment processing fails."""
-
-    pass
-
-
-class PaymentService:
-    """
-    Service for processing payments via Stripe.
-
-    Encapsulates all Stripe-related logic, making it easier to:
-    - Test with mocks
-    - Switch payment providers
-    - Handle payment errors consistently
-    """
-
-    def __init__(self) -> None:
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-
-    def charge(self, amount: Decimal, token: str, description: str = "Terra Viva Purchase") -> str:
-        """
-        Process a payment charge.
-
-        Args:
-            amount: Amount in decimal (e.g., 99.99)
-            token: Stripe token from frontend
-            description: Charge description
-
-        Returns:
-            Stripe charge ID
-
-        Raises:
-            PaymentError: If payment fails
-        """
-        try:
-            charge = stripe.Charge.create(
-                amount=int(amount * 100),  # Stripe expects cents
-                currency="USD",
-                description=description,
-                source=token,
-            )
-            return charge.id
-        except stripe.error.CardError as e:
-            raise PaymentError(f"Card declined: {e.user_message}") from e
-        except stripe.error.StripeError as e:
-            raise PaymentError(f"Payment failed: {str(e)}") from e
+from .validators import validate_order_items
 
 
 class OrderService:
@@ -69,11 +21,11 @@ class OrderService:
     Service for order business logic.
 
     Handles order creation, total calculation, and coordinates
-    with PaymentService for checkout flow.
+    with payment gateway for checkout flow.
     """
 
-    def __init__(self, payment_service: PaymentService | None = None) -> None:
-        self.payment_service = payment_service or PaymentService()
+    def __init__(self, payment_gateway: StripeGateway | None = None) -> None:
+        self.payment_gateway = payment_gateway or StripeGateway()
 
     def calculate_total(self, items: list[dict[str, Any]]) -> Decimal:
         """
@@ -84,7 +36,12 @@ class OrderService:
 
         Returns:
             Total amount as Decimal
+
+        Raises:
+            InvalidOrderError: If items are invalid
         """
+        validate_order_items(items)
+
         total = Decimal("0.00")
         for item in items:
             quantity = item.get("quantity", 1)
@@ -139,6 +96,7 @@ class OrderService:
 
         Raises:
             PaymentError: If payment fails
+            InvalidOrderError: If order data is invalid
         """
         items_data = validated_data.pop("items")
         stripe_token = validated_data.pop("stripe_token")
@@ -146,8 +104,8 @@ class OrderService:
         # Calculate total
         paid_amount = self.calculate_total(items_data)
 
-        # Process payment
-        self.payment_service.charge(
+        # Process payment via gateway
+        self.payment_gateway.charge(
             amount=paid_amount,
             token=stripe_token,
             description=f"Terra Viva - Order for {user.email}",

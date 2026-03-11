@@ -9,9 +9,10 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .exceptions import PaymentError
 from .models import Order
 from .serializers import MyOrderSerializer, OrderSerializer
-from .services import OrderService, PaymentError
+from .services import OrderService
 
 
 @api_view(["POST"])
@@ -24,7 +25,6 @@ def checkout(request):
     Validates input, delegates to OrderService for business logic.
     """
     serializer = OrderSerializer(data=request.data)
-
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
