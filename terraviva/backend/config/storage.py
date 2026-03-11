@@ -28,7 +28,7 @@ class SupabaseStorage(Storage):
         """Determine content type from file."""
         content_type = getattr(content, "content_type", "application/octet-stream")
 
-        filename: str | None = getattr(content, "name", None)
+        filename = getattr(content, "name", None)
         if filename:
             filename_lower = filename.lower()
             if filename_lower.endswith((".jpg", ".jpeg")):

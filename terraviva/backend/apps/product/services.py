@@ -46,13 +46,13 @@ class ImageService:
         size = size or cls.DEFAULT_THUMBNAIL_SIZE
         quality = quality or cls.DEFAULT_QUALITY
 
-        img = Image.open(image)
-        img = img.convert("RGB")
-        img.thumbnail(size)
+        with Image.open(image) as img:
+            converted = img.convert("RGB")
+            converted.thumbnail(size)
 
-        thumb_io = BytesIO()
-        img.save(thumb_io, cls.DEFAULT_FORMAT, quality=quality)
-        thumb_io.seek(0)
+            thumb_io = BytesIO()
+            converted.save(thumb_io, cls.DEFAULT_FORMAT, quality=quality)
+            thumb_io.seek(0)
 
         filename = os.path.basename(image.name)
         return File(thumb_io, name=filename)
