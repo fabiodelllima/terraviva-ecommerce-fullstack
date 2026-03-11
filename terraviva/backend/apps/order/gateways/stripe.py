@@ -9,6 +9,7 @@ from decimal import Decimal
 
 import stripe
 from django.conf import settings
+from stripe import CardError, StripeError
 
 from ..exceptions import PaymentError
 from ..validators import validate_amount, validate_payment_token
@@ -65,10 +66,10 @@ class StripeGateway:
             logger.info(f"Payment successful: charge_id={charge.id}")
             return charge.id
 
-        except stripe.error.CardError as e:
+        except CardError as e:
             logger.warning(f"Card declined: {e.user_message}")
             raise PaymentError(f"Card declined: {e.user_message}") from e
 
-        except stripe.error.StripeError as e:
+        except StripeError as e:
             logger.error(f"Payment failed: {str(e)}")
             raise PaymentError(f"Payment failed: {str(e)}") from e
