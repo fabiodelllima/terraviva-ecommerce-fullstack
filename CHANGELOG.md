@@ -11,6 +11,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.7.0] - 2026-03-11
+
+### Context
+
+Implementation of intermediate Clean Architecture patterns with SOLID principles, establishing clear separation between Presentation, Application, Domain, and Infrastructure layers.
+
+### Added
+
+- **Clean Architecture Layers**
+  - `apps/order/gateways/stripe.py`: StripeGateway for payment processing
+  - `apps/order/exceptions.py`: Domain exceptions (PaymentError, InvalidOrderError)
+  - `apps/order/validators.py`: Defensive programming with guard clauses
+  - `apps/product/services.py`: ImageService for image processing
+
+- **Type Checking**
+  - Mypy configuration with django-stubs plugin
+  - Additional Pyright suppressions for Django stubs compatibility
+
+### Changed
+
+- **OrderService Refactored**
+  - Moved from PaymentService to StripeGateway (infrastructure layer)
+  - Constructor injection for dependency inversion
+  - Integration with validators for fail-fast behavior
+
+- **ImageService Refactored**
+  - Context manager for proper resource cleanup in `make_thumbnail()`
+
+- **Test Configuration**
+  - `settings_test.py` now sets SECRET_KEY and DEBUG before importing
+  - Disabled SECURE_SSL_REDIRECT for test environment
+
+- **Documentation**
+  - `docs/ARCHITECTURE.md` completely rewritten for v0.7.0
+  - Documents Clean Architecture layers, SOLID principles, Service/Gateway patterns
+
+### Infrastructure
+
+- **Dependencies Updated**
+  - Django: 6.0.1 → 6.0.3
+  - cryptography: 46.0.4 → 46.0.5
+  - pillow: 12.1.0 → 12.1.1
+  - sqlparse: 0.5.3 → 0.5.4
+  - Added pyopenssl 25.3.0
+
+---
+
 ## [0.6.0] - 2026-01-30
 
 ### Context
@@ -392,5 +439,5 @@ Project successfully delivered to the NGO, demonstrating technical viability and
 
 ---
 
-**Last updated:** 2026-01-30
-**Current version:** 0.6.0
+**Last updated:** 2026-03-11
+**Current version:** 0.7.0
