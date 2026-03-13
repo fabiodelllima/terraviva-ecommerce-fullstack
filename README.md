@@ -2,7 +2,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Em%20Produção-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.14-blue)
-![Django](https://img.shields.io/badge/Django-6.0.1-green)
+![Django](https://img.shields.io/badge/Django-6.0.3-green)
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.5.13-brightgreen)
 ![Vite](https://img.shields.io/badge/Vite-6.4.1-purple)
 ![CI](https://github.com/fabiodelllima/terraviva-ecommerce-fullstack/actions/workflows/ci.yml/badge.svg)
@@ -20,7 +20,7 @@ E-commerce full-stack para produtos orgânicos. Catálogo, carrinho, checkout co
 ╰────────────────────╯
 ```
 
-> Projeto acadêmico (Coding4Hope, 2021) revitalizado em 2026 como case de portfólio.
+> Projeto acadêmico (Coding4Hope, 2021) revitalizado em 2026 como case para portfólio.
 
 ---
 
@@ -44,7 +44,7 @@ O backend utiliza Django com Django REST Framework para expor uma API RESTful, a
 | Backend               | Frontend      | Infraestrutura         |
 | --------------------- | ------------- | ---------------------- |
 | Python 3.14           | Vue.js 3.5.13 | Render.com (API)       |
-| Django 6.0.1          | Vite 6.4.1    | Vercel (SPA)           |
+| Django 6.0.3          | Vite 6.4.1    | Vercel (SPA)           |
 | Django REST Framework | Vuex 4.1.0    | Supabase (PostgreSQL)  |
 | djoser (auth)         | Bulma 1.0.2   | Supabase Storage (CDN) |
 | Stripe (pagamentos)   | Axios 1.9.0   | GitHub Actions (CI)    |
@@ -137,7 +137,7 @@ pre-commit install
 
 O repositório está organizado em monorepo com separação clara entre backend e frontend dentro do diretório `terraviva/`. Esta estrutura facilita o desenvolvimento local enquanto permite deploys independentes para cada serviço. A documentação técnica fica centralizada em `docs/`.
 
-```
+```plaintext
 terraviva-ecommerce-fullstack/
 ├── .github/
 │   └── workflows/
@@ -281,5 +281,4 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
-**Versão:** 0.6.0
-**Última atualização:** 30/01/2026
+**Última atualização:** 12/03/2026
