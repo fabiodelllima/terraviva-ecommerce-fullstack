@@ -1,6 +1,6 @@
 # ROADMAP
 
-**Versão:** 0.6.0
+**Versão:** 0.7.0
 
 ---
 
@@ -82,29 +82,31 @@ Esta fase estabeleceu a infraestrutura de DevOps necessária para desenvolviment
 
 ---
 
-## Fase 4: Testes & Refatoração - Em Andamento
+## Fase 4: Arquitetura & Refatoração - Concluída
 
-**Período:** Fevereiro 2026
+**Período:** Janeiro-Março 2026
 
-Esta fase expande a cobertura de testes e implementa padrões arquiteturais. O objetivo é atingir >80% de cobertura no backend e >60% no frontend, aplicando princípios de Clean Architecture.
+Esta fase implementou padrões de Clean Architecture e princípios SOLID, estabelecendo separação clara entre camadas de Presentation, Application, Domain e Infrastructure.
 
-### Testes
+### Arquitetura - Concluída
+
+- [x] Service Layer pattern (OrderService, ImageService)
+- [x] Gateway pattern (StripeGateway)
+- [x] Domain exceptions (PaymentError, InvalidOrderError)
+- [x] Validators para programação defensiva
+- [x] Aplicação de princípios SOLID
+- [x] Type hints expandidos (mypy + pyright)
+- [x] Documentação ARCHITECTURE.md atualizada
+
+### Testes - Em Andamento
 
 - [x] pytest + pytest-django configurado
 - [x] Smoke tests básicos (4 testes)
-- [ ] Testes unitários para models
-- [ ] Testes unitários para serializers
+- [ ] Testes unitários para services
+- [ ] Testes unitários para validators
+- [ ] Testes unitários para gateways (com mocks)
 - [ ] Testes de integração para endpoints
 - [ ] Coverage >80% backend
-- [ ] Vitest (frontend)
-- [ ] Coverage >60% frontend
-
-### Refatoração
-
-- [ ] Service Layer pattern
-- [ ] Repository pattern
-- [ ] Aplicação de princípios SOLID
-- [ ] Expansão de type hints
 
 ### Documentação
 
@@ -114,9 +116,33 @@ Esta fase expande a cobertura de testes e implementa padrões arquiteturais. O o
 
 ---
 
-## Fase 5: UX/UI Refresh
+## Fase 5: Testes & Cobertura - Próxima
 
-**Período:** Março 2026
+**Período:** Março-Abril 2026
+
+Esta fase expande a cobertura de testes para atingir >80% no backend e >60% no frontend, seguindo abordagem BDD/TDD.
+
+### Backend
+
+- [ ] Testes de caracterização (comportamento atual)
+- [ ] Testes unitários para OrderService
+- [ ] Testes unitários para ImageService
+- [ ] Testes unitários para StripeGateway (mocks)
+- [ ] Testes unitários para validators
+- [ ] Testes de integração para checkout flow
+- [ ] Coverage >80%
+
+### Frontend
+
+- [ ] Vitest configurado
+- [ ] Testes de componentes
+- [ ] Coverage >60%
+
+---
+
+## Fase 6: UX/UI Refresh
+
+**Período:** Abril-Maio 2026
 
 Esta fase renova a interface visual do projeto, aplicando princípios modernos de design e garantindo acessibilidade. O objetivo é atingir score superior a 90 no Lighthouse.
 
@@ -129,11 +155,11 @@ Esta fase renova a interface visual do projeto, aplicando princípios modernos d
 
 ---
 
-## Fase 6: API Evolution
+## Fase 7: API Evolution
 
-**Período:** Abril 2026
+**Período:** Maio-Junho 2026
 
-A sexta fase evolui a API REST para GraphQL, oferecendo flexibilidade para o frontend e demonstrando conhecimento em diferentes paradigmas de API. A migração de Vuex para Pinia moderniza o gerenciamento de estado.
+A sétima fase evolui a API REST para GraphQL, oferecendo flexibilidade para o frontend e demonstrando conhecimento em diferentes paradigmas de API. A migração de Vuex para Pinia moderniza o gerenciamento de estado.
 
 - [ ] GraphQL (graphene-django)
 - [ ] Apollo Client
@@ -142,9 +168,9 @@ A sexta fase evolui a API REST para GraphQL, oferecendo flexibilidade para o fro
 
 ---
 
-## Fase 7: Observabilidade
+## Fase 8: Observabilidade
 
-**Período:** Maio 2026
+**Período:** Junho-Julho 2026
 
 Esta fase implementa observabilidade abrangente para monitoramento em produção. Error tracking, logging estruturado e coleta de métricas permitem detecção proativa de problemas.
 
@@ -156,9 +182,9 @@ Esta fase implementa observabilidade abrangente para monitoramento em produção
 
 ---
 
-## Fase 8: Event-Driven Architecture
+## Fase 9: Event-Driven Architecture
 
-**Período:** Junho-Julho 2026
+**Período:** Julho-Agosto 2026
 
 Esta fase introduz processamento assíncrono e arquitetura orientada a eventos. Celery com Redis permite execução de tasks em background, enquanto message brokers possibilitam comunicação desacoplada entre componentes.
 
@@ -169,9 +195,9 @@ Esta fase introduz processamento assíncrono e arquitetura orientada a eventos. 
 
 ---
 
-## Fase 9: Infrastructure as Code
+## Fase 10: Infrastructure as Code
 
-**Período:** Agosto 2026
+**Período:** Agosto-Setembro 2026
 
 A fase final implementa orquestração de containers com Kubernetes e monitoramento com Prometheus/Grafana. Foco em operações de infraestrutura cloud-native.
 
@@ -195,4 +221,4 @@ A fase final implementa orquestração de containers com Kubernetes e monitorame
 
 ---
 
-**Última revisão:** 30/01/2026
+**Última revisão:** 13/03/2026
