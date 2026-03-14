@@ -33,3 +33,4 @@ pnpm-debug.log*
 .env.*.local
 .env.production
 *.tar.gz
+.coverage
