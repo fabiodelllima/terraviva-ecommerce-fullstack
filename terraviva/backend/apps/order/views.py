@@ -1,8 +1,8 @@
 """
 Order views - Controller layer.
-
 Thin controllers that delegate business logic to services.
 """
+import logging
 
 from rest_framework import authentication, permissions, status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -14,6 +14,8 @@ from .models import Order
 from .serializers import MyOrderSerializer, OrderSerializer
 from .services import OrderService
 
+logger = logging.getLogger(__name__)
+
 
 @api_view(["POST"])
 @authentication_classes([authentication.TokenAuthentication])
@@ -21,7 +23,6 @@ from .services import OrderService
 def checkout(request):
     """
     Process checkout and create order.
-
     Validates input, delegates to OrderService for business logic.
     """
     serializer = OrderSerializer(data=request.data)
@@ -36,7 +37,11 @@ def checkout(request):
         )
         return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
     except PaymentError as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        logger.warning("Payment failed for user %s: %s", request.user.id, e)
+        return Response(
+            {"error": "Payment could not be processed. Please try again."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class OrdersList(APIView):
