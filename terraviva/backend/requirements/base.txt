@@ -12,7 +12,7 @@ cryptography>=46.0.6
 defusedxml==0.7.1
 deprecation==2.1.0
 dj-database-url==2.3.0
-Django==6.0.3
+Django==6.0.4
 django-cors-headers==4.6.0
 django-on-heroku==1.1.2
 django-templated-mail==1.1.1
