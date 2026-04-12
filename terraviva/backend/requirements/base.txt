@@ -8,11 +8,11 @@ charset-normalizer==3.4.1
 click==8.3.1
 coreapi==2.3.3
 coreschema==0.0.4
-cryptography==46.0.5
+cryptography>=46.0.6
 defusedxml==0.7.1
 deprecation==2.1.0
 dj-database-url==2.3.0
-Django==6.0.3
+Django==6.0.4
 django-cors-headers==4.6.0
 django-on-heroku==1.1.2
 django-templated-mail==1.1.1
@@ -44,7 +44,7 @@ psycopg2-binary==2.9.11
 pycparser==2.22
 pydantic==2.12.5
 pydantic_core==2.41.5
-Pygments==2.19.2
+Pygments==2.20.0
 pyiceberg==0.10.0
 PyJWT==2.12.0
 pyparsing==3.3.1
@@ -54,7 +54,7 @@ python-dotenv==1.0.0
 python3-openid==3.2.0
 pytz==2024.2
 realtime==2.27.1
-requests==2.32.4
+requests==2.33.0
 requests-oauthlib==2.0.0
 rich==14.2.0
 six==1.16.0
@@ -77,4 +77,4 @@ urllib3==2.6.3
 websockets==15.0.1
 whitenoise==6.8.2
 yarl==1.22.0
-pyopenssl==25.3.0
+pyopenssl==26.0.0
