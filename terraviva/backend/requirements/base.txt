@@ -55,7 +55,7 @@ pytz==2026.1.post1
 realtime==2.27.1
 requests==2.33.0
 requests-oauthlib==2.0.0
-rich==14.2.0
+rich==15.0.0
 six==1.16.0
 social-auth-app-django==5.6.0
 social-auth-core==4.5.4
