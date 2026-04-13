@@ -2,7 +2,7 @@ name: Keep Services Alive
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Diariamente às 08:00 UTC (05:00 BRT)
+    - cron: '*/14 * * * *'  # A cada 14 minutos (Render suspende após 15min)
   workflow_dispatch:
 
 permissions:
@@ -12,16 +12,20 @@ jobs:
   keepalive:
     runs-on: ubuntu-latest
     steps:
+      - name: Ping Render API
+        run: |
+          echo "[INFO] Pinging Render API..."
+          curl -sf --max-time 60 \
+            https://terraviva-api-bg8s.onrender.com/api/v1/latest-products/ \
+            > /dev/null
+          echo "[OK] Render active"
+
       - name: Ping Supabase Database
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "[INFO] Pinging Supabase database..."
-          psql "$DATABASE_URL" -c "SELECT 1;"
+          # Instalar psql se necessário
+          which psql || sudo apt-get install -y postgresql-client
+          psql "$DATABASE_URL" -c "SELECT 1;" > /dev/null
           echo "[OK] Supabase active"
-
-      - name: Ping Render API
-        run: |
-          echo "[INFO] Pinging Render API..."
-          curl -sf --max-time 120 https://terraviva-api-bg8s.onrender.com/api/v1/latest-products/ > /dev/null
-          echo "[OK] Render active"
