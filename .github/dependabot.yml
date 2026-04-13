@@ -34,6 +34,17 @@ updates:
           - "minor"
           - "patch"
 
+  # Docker base images (frontend and backend)
+  - package-ecosystem: "docker"
+    directories:
+      - "/terraviva/frontend"
+      - "/terraviva/backend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(docker)"
+      include: "scope"
+
   # GitHub Actions workflows
   - package-ecosystem: "github-actions"
     directory: "/"
