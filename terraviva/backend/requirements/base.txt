@@ -36,7 +36,7 @@ mdurl==0.1.2
 mmh3==5.2.0
 multidict==6.7.0
 oauthlib==3.2.2
-packaging==25.0
+packaging==26.0
 pillow==12.2.0
 postgrest==2.27.1
 propcache==0.4.1
