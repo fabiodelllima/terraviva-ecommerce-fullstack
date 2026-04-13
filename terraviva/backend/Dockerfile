@@ -9,7 +9,7 @@
 # Stage 1: Builder
 # Build Python wheels to avoid compiling in production image
 # -----------------------------------------------------------------------------
-FROM python:3.13-slim AS builder
+FROM python:3.14-slim AS builder
 
 WORKDIR /build
 
@@ -31,7 +31,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements
 # Stage 2: Production
 # Minimal image with only runtime dependencies
 # -----------------------------------------------------------------------------
-FROM python:3.13-slim AS production
+FROM python:3.14-slim AS production
 
 # Metadata
 LABEL maintainer="Terra Viva Team"
