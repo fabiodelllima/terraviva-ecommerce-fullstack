@@ -20,7 +20,7 @@ updates:
           - "minor"
           - "patch"
 
-  # Backend (Django) - pip via pyproject.toml
+  # Backend (Django) - pip via requirements
   - package-ecosystem: "pip"
     directory: "/terraviva/backend"
     schedule:
@@ -36,6 +36,14 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # Bloqueado por pyiceberg (dep transitiva de supabase-storage3) que requer cachetools<7
+      # Reavaliar quando supabase-py remover dep de pyiceberg
+      - dependency-name: "cachetools"
+        versions: [">=7.0.0"]
+      # Bloqueado por pyiceberg (dep transitiva de supabase-storage3) que requer rich<15
+      - dependency-name: "rich"
+        versions: [">=15.0.0"]
 
   # Docker base images
   - package-ecosystem: "docker"
