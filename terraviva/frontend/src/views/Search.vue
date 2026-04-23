@@ -15,7 +15,7 @@
   import ProductBox from '@/components/ProductBox.vue'
 
   export default {
-    name: 'Search',
+    name: 'SearchView',
     components: {
       ProductBox,
     },
