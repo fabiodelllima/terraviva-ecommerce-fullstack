@@ -12,5 +12,5 @@ ruff==0.15.11
 
 # Type Checking
 mypy==1.20.1
-django-stubs==5.1.1
+django-stubs==6.0.3
 django-types
