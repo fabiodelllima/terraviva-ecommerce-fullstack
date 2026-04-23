@@ -207,12 +207,12 @@
     computed: {
       cartTotalPrice() {
         return this.cart.items.reduce((acc, curVal) => {
-          return (acc += curVal.product.price * curVal.quantity)
+          return acc + curVal.product.price * curVal.quantity
         }, 0)
       },
       cartTotalLength() {
         return this.cart.items.reduce((acc, curVal) => {
-          return (acc += curVal.quantity)
+          return acc + curVal.quantity
         }, 0)
       },
     },
