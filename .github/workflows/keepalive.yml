@@ -2,7 +2,7 @@ name: Keep Services Alive
 
 on:
   schedule:
-    - cron: '*/14 * * * *'  # A cada 14 minutos (Render suspende após 15min)
+    - cron: '*/14 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,9 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Render API
+        # Render free tier cold start can take up to 90s; allow ample
+        # timeout plus retries to absorb transient network issues.
         run: |
           echo "[INFO] Pinging Render API..."
-          curl -sf --max-time 60 \
+          curl -sf \
+            --max-time 180 \
+            --retry 2 \
+            --retry-delay 30 \
+            --retry-connrefused \
             https://terraviva-api-bg8s.onrender.com/api/v1/latest-products/ \
             > /dev/null
           echo "[OK] Render active"
@@ -25,7 +31,11 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           echo "[INFO] Pinging Supabase database..."
-          # Instalar psql se necessário
           which psql || sudo apt-get install -y postgresql-client
-          psql "$DATABASE_URL" -c "SELECT 1;" > /dev/null
+          # Connect timeout protects against transient DNS/network blips;
+          # statement timeout caps the trivial SELECT 1 itself.
+          psql "$DATABASE_URL" \
+            -v ON_ERROR_STOP=1 \
+            -c "SET statement_timeout = '30s'; SELECT 1;" \
+            > /dev/null
           echo "[OK] Supabase active"
