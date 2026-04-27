@@ -502,3 +502,145 @@ class TestOrderServiceProcessCheckout:
 
         call_kwargs = gateway.charge.call_args.kwargs
         assert user.email in call_kwargs["description"]
+
+
+# =============================================================================
+# E2E Tests: /api/v1/checkout/
+# =============================================================================
+
+
+@pytest.fixture
+def authenticated_client(user):
+    """Return an APIClient authenticated as the test user."""
+    from rest_framework.test import APIClient
+
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
+
+
+def _build_checkout_payload(product, quantity=1):
+    """Build a valid checkout payload referencing an existing product."""
+    return {
+        "first_name": "Maria",
+        "last_name": "Silva",
+        "email": "maria@example.com",
+        "address": "Rua Teste, 123",
+        "zipcode": "01000-000",
+        "place": "São Paulo",
+        "phone": "11999998888",
+        "stripe_token": "tok_visa",
+        "items": [
+            {
+                "product": product.pk,
+                "price": str(product.price),
+                "quantity": quantity,
+            }
+        ],
+    }
+
+
+@pytest.mark.django_db
+class TestCheckoutEndpoint:
+    """E2E tests for /api/v1/checkout/ endpoint."""
+
+    def test_unauthenticated_returns_401_or_403(self, client):
+        """Unauthenticated request must be rejected with 401 or 403."""
+        response = client.post("/api/v1/checkout/", {}, content_type="application/json")
+        assert response.status_code in (401, 403)
+
+    @patch("apps.order.views.OrderService")
+    def test_valid_payload_returns_201(self, mock_service_cls, authenticated_client):
+        """Valid payload with successful payment must return 201."""
+        product = ProductFactory(price=Decimal("25.00"))
+        payload = _build_checkout_payload(product, quantity=2)
+
+        # Mock OrderService to avoid hitting Stripe
+        mock_order = MagicMock()
+        mock_order.pk = 1
+        mock_order.id = 1
+        mock_order.first_name = "Maria"
+        mock_order.last_name = "Silva"
+        mock_order.email = "maria@example.com"
+        mock_order.address = "Rua Teste, 123"
+        mock_order.zipcode = "01000-000"
+        mock_order.place = "São Paulo"
+        mock_order.phone = "11999998888"
+        mock_order.stripe_token = "tok_visa"
+        mock_order.items.all.return_value = []
+        mock_service_cls.return_value.process_checkout.return_value = mock_order
+
+        response = authenticated_client.post(
+            "/api/v1/checkout/",
+            payload,
+            format="json",
+        )
+
+        assert response.status_code == 201
+        mock_service_cls.return_value.process_checkout.assert_called_once()
+
+    def test_invalid_payload_returns_400(self, authenticated_client):
+        """Payload missing required fields must return 400 with serializer errors."""
+        payload = {"first_name": "Maria"}  # missing everything else
+
+        response = authenticated_client.post(
+            "/api/v1/checkout/",
+            payload,
+            format="json",
+        )
+
+        assert response.status_code == 400
+        # At least the required fields should be in the error response
+        assert "last_name" in response.data
+        assert "email" in response.data
+        assert "items" in response.data
+
+    def test_valid_payload_persists_order_in_database(self, authenticated_client, user):
+        """Successful checkout must create Order and OrderItem rows."""
+        product = ProductFactory(price=Decimal("30.00"))
+        payload = _build_checkout_payload(product, quantity=2)
+
+        with patch("apps.order.views.OrderService") as mock_service_cls:
+            # Make the mocked service actually create an order using the real ORM
+            def real_process_checkout(user, validated_data):
+                from apps.order.services import OrderService as RealService
+
+                gateway = MagicMock(spec=StripeGateway)
+                gateway.charge.return_value = "ch_e2e_test"
+                real_service = RealService(payment_gateway=gateway)
+                return real_service.process_checkout(user=user, validated_data=validated_data)
+
+            mock_service_cls.return_value.process_checkout.side_effect = real_process_checkout
+
+            response = authenticated_client.post(
+                "/api/v1/checkout/",
+                payload,
+                format="json",
+            )
+
+        assert response.status_code == 201
+        assert Order.objects.count() == 1
+        order = Order.objects.first()
+        assert order is not None
+        assert order.user == user
+        assert order.paid_amount == Decimal("60.00")
+        assert OrderItem.objects.filter(order=order).count() == 1
+
+    @patch("apps.order.views.OrderService")
+    def test_payment_error_returns_400_with_generic_message(self, mock_service_cls, authenticated_client):
+        """PaymentError from service must produce 400 with generic user-safe message."""
+        product = ProductFactory(price=Decimal("10.00"))
+        payload = _build_checkout_payload(product)
+
+        mock_service_cls.return_value.process_checkout.side_effect = PaymentError("Card declined: insufficient funds")
+
+        response = authenticated_client.post(
+            "/api/v1/checkout/",
+            payload,
+            format="json",
+        )
+
+        assert response.status_code == 400
+        # User-facing error must not leak Stripe details
+        assert "insufficient funds" not in str(response.data).lower()
+        assert "error" in response.data
