@@ -35,6 +35,8 @@ typeCheckingMode = "basic"
 reportAttributeAccessIssue = false
 # DRF serializer.validated_data type
 reportArgumentType = false
+# factory_boy reexports without __all__ declaration
+reportPrivateImportUsage = false
 # Django User model incomplete stubs
 reportUnknownMemberType = false
 reportUnknownArgumentType = false

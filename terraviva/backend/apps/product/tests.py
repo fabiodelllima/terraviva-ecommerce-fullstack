@@ -7,6 +7,13 @@ import pytest
 from django.core.files import File
 from PIL import Image
 
+from apps.product.factories import CategoryFactory, ProductFactory
+from apps.product.selectors import (
+    get_category_by_slug,
+    get_latest_products,
+    get_product_by_slugs,
+    search_products,
+)
 from apps.product.services import ImageService
 
 # =============================================================================
@@ -126,7 +133,7 @@ class TestGetSafeUrl:
 
     def test_field_without_url_attribute_returns_empty_string(self):
         """Field missing .url attribute must return empty string."""
-        field = MagicMock(spec=[])  # spec=[] removes all auto-generated attrs
+        field = MagicMock(spec=[])
         assert ImageService.get_safe_url(field) == ""
 
     def test_field_with_url_returns_url_string(self):
@@ -146,3 +153,157 @@ class TestGetSafeUrl:
         field = MagicMock()
         field.url = None
         assert ImageService.get_safe_url(field) == ""
+
+
+# =============================================================================
+# Selectors
+# =============================================================================
+
+
+@pytest.mark.django_db
+class TestGetLatestProducts:
+    """Tests for get_latest_products selector."""
+
+    def test_returns_empty_queryset_when_no_products(self):
+        """Empty database must return empty queryset."""
+        result = get_latest_products()
+        assert result.count() == 0
+
+    def test_returns_products_ordered_by_date_added_desc(self):
+        """Most recently added products must come first."""
+        first = ProductFactory()
+        second = ProductFactory()
+        third = ProductFactory()
+        result = list(get_latest_products())
+        assert result[0] == third
+        assert result[1] == second
+        assert result[2] == first
+
+    def test_default_limit_is_8(self):
+        """Default limit must cap result at 8 products."""
+        ProductFactory.create_batch(10)
+        result = get_latest_products()
+        assert result.count() == 8
+
+    def test_custom_limit_is_respected(self):
+        """Custom limit argument must override default."""
+        ProductFactory.create_batch(5)
+        result = get_latest_products(limit=3)
+        assert result.count() == 3
+
+    def test_limit_larger_than_total_returns_all(self):
+        """Limit higher than available products must return all of them."""
+        ProductFactory.create_batch(2)
+        result = get_latest_products(limit=10)
+        assert result.count() == 2
+
+
+@pytest.mark.django_db
+class TestGetProductBySlugs:
+    """Tests for get_product_by_slugs selector."""
+
+    def test_returns_product_when_both_slugs_match(self):
+        """Matching category and product slugs must return product."""
+        category = CategoryFactory(slug="electronics")
+        product = ProductFactory(category=category, slug="laptop")
+        result = get_product_by_slugs("electronics", "laptop")
+        assert result == product
+
+    def test_returns_none_when_product_slug_not_found(self):
+        """Unknown product slug must return None instead of raising."""
+        category = CategoryFactory(slug="electronics")
+        ProductFactory(category=category, slug="laptop")
+        result = get_product_by_slugs("electronics", "phone")
+        assert result is None
+
+    def test_returns_none_when_category_slug_not_found(self):
+        """Unknown category slug must return None instead of raising."""
+        category = CategoryFactory(slug="electronics")
+        ProductFactory(category=category, slug="laptop")
+        result = get_product_by_slugs("clothing", "laptop")
+        assert result is None
+
+    def test_returns_none_when_product_belongs_to_different_category(self):
+        """Product slug exists but in a different category must return None."""
+        cat_a = CategoryFactory(slug="electronics")
+        # Second category exists in DB but product is not associated with it.
+        CategoryFactory(slug="clothing")
+        ProductFactory(category=cat_a, slug="shared-slug")
+        result = get_product_by_slugs("clothing", "shared-slug")
+        assert result is None
+
+
+@pytest.mark.django_db
+class TestGetCategoryBySlug:
+    """Tests for get_category_by_slug selector."""
+
+    def test_returns_category_when_slug_matches(self):
+        """Existing slug must return the category instance."""
+        category = CategoryFactory(slug="electronics")
+        result = get_category_by_slug("electronics")
+        assert result == category
+
+    def test_returns_none_when_slug_not_found(self):
+        """Unknown slug must return None instead of raising."""
+        CategoryFactory(slug="electronics")
+        result = get_category_by_slug("nonexistent")
+        assert result is None
+
+    def test_returns_none_for_empty_string(self):
+        """Empty slug must return None gracefully."""
+        result = get_category_by_slug("")
+        assert result is None
+
+
+@pytest.mark.django_db
+class TestSearchProducts:
+    """Tests for search_products selector."""
+
+    def test_empty_query_returns_empty_queryset(self):
+        """Empty query string must return empty queryset without DB hit."""
+        ProductFactory.create_batch(3)
+        result = search_products("")
+        assert result.count() == 0
+
+    def test_finds_product_by_name(self):
+        """Query matching product name must return that product."""
+        target = ProductFactory(name="Wireless Keyboard")
+        ProductFactory(name="USB Cable")
+        result = search_products("keyboard")
+        assert list(result) == [target]
+
+    def test_finds_product_by_description(self):
+        """Query matching product description must return that product."""
+        target = ProductFactory(
+            name="Item A",
+            description="Premium ergonomic design for daily use.",
+        )
+        ProductFactory(name="Item B", description="Standard cable.")
+        result = search_products("ergonomic")
+        assert list(result) == [target]
+
+    def test_search_is_case_insensitive(self):
+        """Search must match regardless of case."""
+        target = ProductFactory(name="Wireless Keyboard")
+        result = search_products("KEYBOARD")
+        assert list(result) == [target]
+
+    def test_partial_match_in_name(self):
+        """Substring of name must match (icontains semantics)."""
+        target = ProductFactory(name="Mechanical Keyboard Pro")
+        result = search_products("Mechanical")
+        assert list(result) == [target]
+
+    def test_no_match_returns_empty(self):
+        """Query with no matches must return empty queryset."""
+        ProductFactory(name="Wireless Keyboard")
+        result = search_products("xyzabc")
+        assert result.count() == 0
+
+    def test_matches_multiple_products(self):
+        """Query matching multiple products must return all of them."""
+        a = ProductFactory(name="Keyboard A")
+        b = ProductFactory(name="Keyboard B")
+        ProductFactory(name="Mouse")
+        result = search_products("keyboard")
+        assert set(result) == {a, b}
