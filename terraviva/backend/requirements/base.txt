@@ -27,7 +27,7 @@ hpack==4.1.0
 httpcore==1.0.9
 httpx==0.28.1
 hyperframe==6.1.0
-idna==3.13
+idna==3.16
 itypes==1.2.0
 Jinja2==3.1.6
 markdown-it-py==4.0.0
@@ -42,7 +42,6 @@ propcache==0.4.1
 psycopg2-binary==2.9.12
 pycparser==3.0
 pydantic==2.13.3
-pydantic_core==2.46.3
 Pygments==2.20.0
 PyJWT==2.12.1
 pyparsing==3.3.2
