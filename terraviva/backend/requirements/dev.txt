@@ -8,8 +8,8 @@ pytest-xdist==3.8.0
 factory-boy==3.3.3
 
 # Code Quality
-ruff==0.15.15
-pyright==1.1.409
+ruff==0.15.17
+pyright==1.1.410
 
 # Type Checking
 mypy==2.1.0
