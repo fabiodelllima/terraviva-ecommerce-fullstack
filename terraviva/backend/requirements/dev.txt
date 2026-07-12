@@ -8,10 +8,10 @@ pytest-xdist==3.8.0
 factory-boy==3.3.3
 
 # Code Quality
-ruff==0.15.20
+ruff==0.15.21
 pyright==1.1.411
 
 # Type Checking
-mypy==2.1.0
+mypy==2.2.0
 django-stubs==6.0.6
 django-types
