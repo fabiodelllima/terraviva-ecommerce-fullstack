@@ -37,7 +37,7 @@ mmh3==5.2.1
 multidict==6.7.1
 oauthlib==3.3.1
 packaging==26.2
-pillow==12.2.0
+pillow==12.3.0
 propcache==0.5.2
 psycopg2-binary==2.9.12
 pycparser==3.0
