@@ -1,17 +1,17 @@
 -r base.txt
 
 # Testing
-pytest==9.0.3
+pytest==9.1.1
 pytest-django==4.12.0
 pytest-cov==7.1.0
 pytest-xdist==3.8.0
 factory-boy==3.3.3
 
 # Code Quality
-ruff==0.15.12
-pyright==1.1.409
+ruff==0.15.20
+pyright==1.1.411
 
 # Type Checking
 mypy==2.1.0
-django-stubs==6.0.3
+django-stubs==6.0.6
 django-types
