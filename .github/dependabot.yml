@@ -47,13 +47,14 @@ updates:
           - "minor"
           - "patch"
     ignore:
-      # Bloqueado por pyiceberg (dep transitiva de supabase-storage3) que requer cachetools<7
-      # Reavaliar quando supabase-py remover dep de pyiceberg
-      - dependency-name: "cachetools"
-        versions: [">=7.0.0"]
-      # Bloqueado por pyiceberg (dep transitiva de supabase-storage3) que requer rich<15
-      - dependency-name: "rich"
-        versions: [">=15.0.0"]
+      # Social auth nao e usado: social_django ausente de INSTALLED_APPS e
+      # djoser.urls.social nao registrado. Ambos vem como dependencia
+      # obrigatoria do djoser, que fixa social-auth-app-django<6.0.0.
+      # Reavaliar se login social for implementado.
+      - dependency-name: "social-auth-app-django"
+        versions: [">=6.0.0"]
+      - dependency-name: "social-auth-core"
+        versions: [">=5.0.0"]
   # Docker base images
   - package-ecosystem: "docker"
     directories:
